@@ -27,6 +27,12 @@ import java.util.*;
  * Rather, it provides a public getSuccessors() function to generate valid successors of the current
  * game. It also implements the Comparable interface and overrides the compareTo method to
  * facilitate the use of searching algorithms that rely on heuristics.
+ * <p>
+ * Also provided are the solved() and verifySolution() methods that can be used to check if a game
+ * has been solved. The solved() function should be used in order to quickly check a game has been
+ * finished, whereas the verifySolution() function should be used to verify the finished game has
+ * been correctly solved. verifySolution() should only be called after solved() has been called and
+ * returned true.
  *
  * @author Savraj Bassi
  * @version 20/11/2023
@@ -405,7 +411,8 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
 
     /**
      * Verifies that the board has been correctly solved (unlike solved() which just checks that all
-     * squares have been filled).
+     * squares have been filled). Should not be invoked unless the board has been completely filled,
+     * as indicated by solved() returning true.
      *
      * @return True if the board is a valid solution and false otherwise
      */
