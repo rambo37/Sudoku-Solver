@@ -42,9 +42,8 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
     private CandidateSet[][] board;
     private boolean[][] hasValueSet;
     private int SIZE;
-    private int TOTAL_SQUARES;
     private int BOX_SIZE;
-    private int filledSquares = 0;
+    private int squaresRemaining;
     private int totalNumberOfCandidates;
 
     /**
@@ -66,7 +65,7 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
         board = new CandidateSet[size][size];
         hasValueSet = new boolean[size][size];
         SIZE = size;
-        TOTAL_SQUARES = size * size;
+        squaresRemaining = size * size;
         BOX_SIZE = (int) Math.sqrt(size);
         totalNumberOfCandidates = size * size * size;
     }
@@ -142,7 +141,7 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
         int previousSize = board[row][column].size();
         board[row][column].assignValue(value);
         hasValueSet[row][column] = true;
-        filledSquares++;
+        squaresRemaining--;
         totalNumberOfCandidates -= (previousSize - 1);
         return updateBoard(row, column, value);
     }
@@ -376,7 +375,7 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
      * @return True if every square has been filled with a single value
      */
     public boolean solved() {
-        return filledSquares == TOTAL_SQUARES;
+        return squaresRemaining == 0;
     }
 
     /**
@@ -475,15 +474,6 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
     }
 
     /**
-     * Returns the number of squares that have yet to be filled. This is the primary heuristic.
-     *
-     * @return The number of unfilled squares
-     */
-    private int squaresRemaining() {
-        return TOTAL_SQUARES - filledSquares;
-    }
-
-    /**
      * Compares this object with the specified object for order. Returns a negative integer, zero,
      * or a positive integer as this object is less than, equal to, or greater than the specified
      * object.
@@ -494,12 +484,9 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
      */
     @Override
     public int compareTo(SudokuBoard other) {
-        int thisSquaresRemaining = squaresRemaining();
-        int otherSquaresRemaining = other.squaresRemaining();
-
-        if (thisSquaresRemaining < otherSquaresRemaining) {
+        if (squaresRemaining < other.squaresRemaining) {
             return -1;
-        } else if (thisSquaresRemaining > otherSquaresRemaining) {
+        } else if (squaresRemaining > other.squaresRemaining) {
             return 1;
         } else {
             // Use another heuristic as a tiebreaker
@@ -572,7 +559,7 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
                 clone.hasValueSet[row][column] = hasValueSet[row][column];
             }
         }
-        clone.filledSquares = filledSquares;
+        clone.squaresRemaining = squaresRemaining;
         clone.totalNumberOfCandidates = totalNumberOfCandidates;
         return clone;
     }
