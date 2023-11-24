@@ -20,6 +20,12 @@ public class SudokuSolverTest {
             *,*,*,*,*,*,*,*,*,
             *,*,*,*,*,*,*,*,*,
             """;
+    private final String unsolvableSmall = """
+            1,*,*,*,
+            *,1,*,*,
+            *,*,*,*,
+            *,*,*,*,
+            """;
     private final String unsolvableBig = """
             *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
             *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
@@ -49,6 +55,12 @@ public class SudokuSolverTest {
             *,1,6,*,*,7,*,*,*
             *,*,*,3,2,9,*,*,1
             """;
+    private final String easySmall = """
+            *,2,3,4,
+            4,3,*,1,
+            3,*,4,2,
+            2,4,1,*
+            """;
     private final String easyBig = """
             16,8,14,3,12,13,4,6,7,5,15,2,10,11,9,1
             7,13,12,5,11,9,2,3,10,4,8,1,15,16,14,6
@@ -77,6 +89,12 @@ public class SudokuSolverTest {
              3,2,8,6,4,1,9,7,5
              9,1,6,8,5,7,2,3,4
              7,4,5,3,2,9,8,6,1
+            """;
+    private final String solvedSmall = """
+            1,2,3,4,
+            4,3,2,1,
+            3,1,4,2,
+            2,4,1,3
             """;
     private final String solvedBig = """
             16,8,14,3,12,13,4,6,7,5,15,2,10,11,9,1
@@ -118,6 +136,19 @@ public class SudokuSolverTest {
             *,*,4,*,*,*,*,1,5
             *,*,*,*,*,*,3,*,*
             """;
+    private final String smallGame1 = """
+            1,2,3,4,
+            *,*,*,*,
+            *,*,*,*,
+            *,4,*,*
+            """;
+
+    private final String smallGame2 = """
+            *,4,*,*,
+            *,*,*,*,
+            *,*,*,*,
+            *,*,1,*
+            """;
     private final String bigGame1 = """
             *,5,*,14,13,*,7,*,*,*,3,10,11,*,1,*
             11,*,*,*,12,14,*,*,1,4,*,9,*,*,*,6
@@ -155,8 +186,8 @@ public class SudokuSolverTest {
             *,*,4,*,2,*,9,13,*,*,14,*,11,*,*,8
             """;
 
-    private final String[] solvableGamesSize9 = new String[]{game1, game2};
-    private final String[] solvableGamesSize16 = new String[]{bigGame1, bigGame2};
+    private final String[] solvableGames = new String[]{game1, game2, smallGame1, smallGame2,
+            bigGame1, bigGame2};
 
     SudokuSolver breadthFirstSolver;
     SudokuSolver depthFirstSolver;
@@ -171,25 +202,23 @@ public class SudokuSolverTest {
 
     /**
      * Runs the given solver on all the solvable games to see the solver is able to solve them
+     *
      * @param solver The solver to be tested
      */
     private void runSolverOnSolvableGames(SudokuSolver solver) {
-        for (String solvableGame : solvableGamesSize9) {
-            assertSolverSolvesBoard(solver, 9, solvableGame);
-        }
-        for (String solvableGame : solvableGamesSize16) {
-            assertSolverSolvesBoard(solver, 16, solvableGame);
+        for (String solvableGame : solvableGames) {
+            assertSolverSolvesBoard(solver, solvableGame);
         }
     }
 
     /**
      * Tests that the given solver is able to solve the provided game
+     *
      * @param solver The solver to be tested
-     * @param size The size of the Sudoku game
-     * @param game A string representation of the Sudoku game to be solved
+     * @param game   A string representation of the Sudoku game to be solved
      */
-    private void assertSolverSolvesBoard(SudokuSolver solver, int size, String game) {
-        SudokuBoard board = solver.solve(size, game);
+    private void assertSolverSolvesBoard(SudokuSolver solver, String game) {
+        SudokuBoard board = solver.solve(game);
         assertTrue(board.solved());
         assertTrue(board.verifySolution());
     }
@@ -200,23 +229,27 @@ public class SudokuSolverTest {
         @Test
         public void testUnsolvableGameThrowsException() {
             assertThrows(IllegalStateException.class,
-                    () -> breadthFirstSolver.solve(9, unsolvable));
+                    () -> breadthFirstSolver.solve(unsolvable));
             assertThrows(IllegalStateException.class,
-                    () -> breadthFirstSolver.solve(16, unsolvableBig));
+                    () -> breadthFirstSolver.solve(unsolvableSmall));
+            assertThrows(IllegalStateException.class,
+                    () -> breadthFirstSolver.solve(unsolvableBig));
         }
 
         // Solver should solve a game that is solved automatically by the code in SudokuBoard
         @Test
         public void testEasilySolvedGameGivenToSolveMethod() {
-            assertSolverSolvesBoard(breadthFirstSolver, 9, easy);
-            assertSolverSolvesBoard(breadthFirstSolver, 16, easyBig);
+            assertSolverSolvesBoard(breadthFirstSolver, easy);
+            assertSolverSolvesBoard(breadthFirstSolver, easySmall);
+            assertSolverSolvesBoard(breadthFirstSolver, easyBig);
         }
 
         // An already solved game should be solvable
         @Test
         public void testSolvedGameGivenToSolveMethod() {
-            assertSolverSolvesBoard(breadthFirstSolver, 9, solved);
-            assertSolverSolvesBoard(breadthFirstSolver, 16, solvedBig);
+            assertSolverSolvesBoard(breadthFirstSolver, solved);
+            assertSolverSolvesBoard(breadthFirstSolver, solvedSmall);
+            assertSolverSolvesBoard(breadthFirstSolver, solvedBig);
         }
 
         // Run the solver on all the solvable games and ensure they are all correctly solved
@@ -229,7 +262,7 @@ public class SudokuSolverTest {
         @Test
         public void testAverageTime() {
             assertEquals(breadthFirstSolver.getAverageTime(bigGame1), 0);
-            breadthFirstSolver.solve(16, bigGame1);
+            breadthFirstSolver.solve(bigGame1);
             assertTrue(breadthFirstSolver.getAverageTime(bigGame1) > 0);
         }
     }
@@ -239,21 +272,24 @@ public class SudokuSolverTest {
     class DepthFirstSolverTest {
         @Test
         public void testUnsolvableGameThrowsException() {
-            assertThrows(IllegalStateException.class, () -> depthFirstSolver.solve(9, unsolvable));
+            assertThrows(IllegalStateException.class, () -> depthFirstSolver.solve(unsolvable));
             assertThrows(IllegalStateException.class,
-                    () -> depthFirstSolver.solve(16, unsolvableBig));
+                    () -> depthFirstSolver.solve(unsolvableSmall));
+            assertThrows(IllegalStateException.class, () -> depthFirstSolver.solve(unsolvableBig));
         }
 
         @Test
         public void testEasilySolvedGameGivenToSolveMethod() {
-            assertSolverSolvesBoard(depthFirstSolver, 9, easy);
-            assertSolverSolvesBoard(depthFirstSolver, 16, easyBig);
+            assertSolverSolvesBoard(depthFirstSolver, easy);
+            assertSolverSolvesBoard(depthFirstSolver, easySmall);
+            assertSolverSolvesBoard(depthFirstSolver, easyBig);
         }
 
         @Test
         public void testSolvedGameGivenToSolveMethod() {
-            assertSolverSolvesBoard(depthFirstSolver, 9, solved);
-            assertSolverSolvesBoard(depthFirstSolver, 16, solvedBig);
+            assertSolverSolvesBoard(depthFirstSolver, solved);
+            assertSolverSolvesBoard(depthFirstSolver, solvedSmall);
+            assertSolverSolvesBoard(depthFirstSolver, solvedBig);
         }
 
         @Test
@@ -264,7 +300,7 @@ public class SudokuSolverTest {
         @Test
         public void testAverageTime() {
             assertEquals(depthFirstSolver.getAverageTime(bigGame1), 0);
-            depthFirstSolver.solve(16, bigGame1);
+            depthFirstSolver.solve(bigGame1);
             assertTrue(depthFirstSolver.getAverageTime(bigGame1) > 0);
         }
     }
@@ -274,21 +310,23 @@ public class SudokuSolverTest {
     class BestFirstSolverTest {
         @Test
         public void testUnsolvableGameThrowsException() {
-            assertThrows(IllegalStateException.class, () -> bestFirstSolver.solve(9, unsolvable));
-            assertThrows(IllegalStateException.class,
-                    () -> bestFirstSolver.solve(16, unsolvableBig));
+            assertThrows(IllegalStateException.class, () -> bestFirstSolver.solve(unsolvable));
+            assertThrows(IllegalStateException.class, () -> bestFirstSolver.solve(unsolvableSmall));
+            assertThrows(IllegalStateException.class, () -> bestFirstSolver.solve(unsolvableBig));
         }
 
         @Test
         public void testEasilySolvedGameGivenToSolveMethod() {
-            assertSolverSolvesBoard(bestFirstSolver, 9, easy);
-            assertSolverSolvesBoard(bestFirstSolver, 16, easyBig);
+            assertSolverSolvesBoard(bestFirstSolver, easy);
+            assertSolverSolvesBoard(bestFirstSolver, easySmall);
+            assertSolverSolvesBoard(bestFirstSolver, easyBig);
         }
 
         @Test
         public void testSolvedGameGivenToSolveMethod() {
-            assertSolverSolvesBoard(bestFirstSolver, 9, solved);
-            assertSolverSolvesBoard(bestFirstSolver, 16, solvedBig);
+            assertSolverSolvesBoard(bestFirstSolver, solved);
+            assertSolverSolvesBoard(bestFirstSolver, solvedSmall);
+            assertSolverSolvesBoard(bestFirstSolver, solvedBig);
         }
 
         @Test
@@ -299,7 +337,7 @@ public class SudokuSolverTest {
         @Test
         public void testAverageTime() {
             assertEquals(bestFirstSolver.getAverageTime(bigGame1), 0);
-            bestFirstSolver.solve(16, bigGame1);
+            bestFirstSolver.solve(bigGame1);
             assertTrue(bestFirstSolver.getAverageTime(bigGame1) > 0);
         }
     }

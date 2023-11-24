@@ -11,7 +11,7 @@ import java.util.*;
  * calculate the average time taken to solve a particular puzzle.
  *
  * @author Savraj Bassi
- * @version 20/11/2023
+ * @version 24/11/2023
  */
 
 public abstract class SudokuSolver {
@@ -19,18 +19,17 @@ public abstract class SudokuSolver {
     private final Map<String, ArrayList<Long>> timesMap = new HashMap<>();
 
     /**
-     * Solves the Sudoku puzzle of the given size specified by the String board.
+     * Solves the Sudoku puzzle specified by the String board.
      *
-     * @param size  The size of the Sudoku board (usually 9 for a standard Sudoku game)
      * @param board The String representation of the Sudoku board
      * @return A solved SudokuBoard object if it exists and otherwise null
      */
-    public SudokuBoard solve(int size, String board) {
+    public SudokuBoard solve(String board) {
         openList.clear();
         long startTime = System.currentTimeMillis();
 
         // The initial starting board, which may already even be complete
-        SudokuBoard sudokuBoard = new SudokuBoard(size, board);
+        SudokuBoard sudokuBoard = new SudokuBoard(board);
         openList.add(sudokuBoard);
 
         while (!openList.isEmpty()) {

@@ -9,6 +9,199 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SudokuBoardTest {
 
     @Test
+    public void testIllegalSizeGameThrowsException() {
+        String size3Game = """
+                1,*,*,
+                2,*,*,
+                3,*,*,
+                """;
+
+        String size5Game = """
+                1,*,*,*,*
+                2,*,*,*,*
+                3,*,*,*,*
+                4,*,*,*,*
+                5,*,*,*,*
+                """;
+
+        String size10Game = """
+                1,*,*,*,*,*,*,*,*,*,
+                2,*,*,*,*,*,*,*,*,*,
+                3,*,*,*,*,*,*,*,*,*,
+                4,*,*,*,*,*,*,*,*,*,
+                5,*,*,*,*,*,*,*,*,*,
+                6,*,*,*,*,*,*,*,*,*,
+                7,*,*,*,*,*,*,*,*,*,
+                8,*,*,*,*,*,*,*,*,*,
+                9,*,*,*,*,*,*,*,*,*,
+                10,*,*,*,*,*,*,*,*,*
+                """;
+
+        String size25Game = """
+                1,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                2,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                3,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                4,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                5,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                6,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                7,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                8,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                9,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                10,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                11,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                12,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                13,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                14,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                15,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                16,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                17,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                18,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                19,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                20,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                21,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                22,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                23,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                24,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                25,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                """;
+
+        // This game is 8 by 9
+        String nonSquareGame = """
+                1,*,*,*,*,*,*,*,*,
+                2,*,*,*,*,*,*,*,*,
+                3,*,*,*,*,*,*,*,*,
+                4,*,*,*,*,*,*,*,*,
+                5,*,*,*,*,*,*,*,*,
+                6,*,*,*,*,*,*,*,*,
+                7,*,*,*,*,*,*,*,*,
+                8,*,*,*,*,*,*,*,*,
+                """;
+
+        // This game is 9 by 8
+        String nonSquareGame2 = """
+                1,*,*,*,*,*,*,*,
+                2,*,*,*,*,*,*,*,
+                3,*,*,*,*,*,*,*,
+                4,*,*,*,*,*,*,*,
+                5,*,*,*,*,*,*,*,
+                6,*,*,*,*,*,*,*,
+                7,*,*,*,*,*,*,*,
+                8,*,*,*,*,*,*,*,
+                9,*,*,*,*,*,*,*,
+                """;
+
+        // This game is 10 by 9
+        String nonSquareGame3 = """
+                1,*,*,*,*,*,*,*,*,
+                2,*,*,*,*,*,*,*,*,
+                3,*,*,*,*,*,*,*,*,
+                4,*,*,*,*,*,*,*,*,
+                5,*,*,*,*,*,*,*,*,
+                6,*,*,*,*,*,*,*,*,
+                7,*,*,*,*,*,*,*,*,
+                8,*,*,*,*,*,*,*,*,
+                9,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                """;
+
+        // This game is 9 by 10
+        String nonSquareGame4 = """
+                1,*,*,*,*,*,*,*,*,*,
+                2,*,*,*,*,*,*,*,*,*,
+                3,*,*,*,*,*,*,*,*,*,
+                4,*,*,*,*,*,*,*,*,*,
+                5,*,*,*,*,*,*,*,*,*,
+                6,*,*,*,*,*,*,*,*,*,
+                7,*,*,*,*,*,*,*,*,*,
+                8,*,*,*,*,*,*,*,*,*,
+                9,*,*,*,*,*,*,*,*,*,
+                """;
+
+        // This game is nearly 9 by 9 but is missing a value
+        String nonSquareGame5 = """
+                1,*,*,*,*,*,*,*,*,
+                2,*,*,*,*,*,*,*,*,
+                3,*,*,*,*,*,*,*,*,
+                4,*,*,*,*,*,*,*,*,
+                5,*,*,*,*,*,*,*,*,
+                6,*,*,*,*,*,*,*,
+                7,*,*,*,*,*,*,*,*,
+                8,*,*,*,*,*,*,*,*,
+                9,*,*,*,*,*,*,*,*,
+                """;
+
+        // This game has a row with an extra value
+        String nonSquareGame6 = """
+                1,*,*,*,*,*,*,*,*,
+                2,*,*,*,*,*,*,*,*,
+                3,*,*,*,*,*,*,*,*,*
+                4,*,*,*,*,*,*,*,*,
+                5,*,*,*,*,*,*,*,*,
+                6,*,*,*,*,*,*,*,*,
+                7,*,*,*,*,*,*,*,*,
+                8,*,*,*,*,*,*,*,*,
+                9,*,*,*,*,*,*,*,*,
+                """;
+
+        // This game has a column with an extra value
+        String nonSquareGame7 = """
+                1,*,*,*,*,*,*,*,*,
+                2,*,*,*,*,*,*,*,*,
+                3,*,*,*,*,*,*,*,*,
+                4,*,*,*,*,*,*,*,*,
+                5,*,*,*,*,*,*,*,*,
+                6,*,*,*,*,*,*,*,*,
+                7,*,*,*,*,*,*,*,*,
+                8,*,*,*,*,*,*,*,*,
+                9,*,*,*,*,*,*,*,*,
+                *,
+                """;
+
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(size3Game));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(size5Game));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(size10Game));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(size25Game));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(nonSquareGame));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(nonSquareGame2));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(nonSquareGame3));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(nonSquareGame4));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(nonSquareGame5));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(nonSquareGame6));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(nonSquareGame7));
+    }
+
+    @Test
+    public void testUnsolvableSize4GameCreation() {
+        // Two 1's in the same row
+        String unsolvable = """
+                *,*,*,*,
+                1,*,*,1,
+                *,*,*,*,
+                *,*,*,*,
+                """;
+
+        // Two 1's in the same column
+        String unsolvable2 = """
+                *,1,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                *,1,*,*,
+                """;
+
+        // Two 1's in the same box
+        String unsolvable3 = """
+                1,*,*,*,
+                *,1,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                """;
+
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable2));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable3));
+    }
+
+    @Test
     public void testUnsolvableSize9GameCreation() {
         // Two 1's in the same row
         String unsolvable = """
@@ -49,9 +242,9 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,
                 """;
 
-        assertThrows(IllegalStateException.class, () -> new SudokuBoard(9, unsolvable));
-        assertThrows(IllegalStateException.class, () -> new SudokuBoard(9, unsolvable2));
-        assertThrows(IllegalStateException.class, () -> new SudokuBoard(9, unsolvable3));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable2));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable3));
     }
 
     @Test
@@ -116,9 +309,9 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
                 """;
 
-        assertThrows(IllegalStateException.class, () -> new SudokuBoard(16, unsolvable));
-        assertThrows(IllegalStateException.class, () -> new SudokuBoard(16, unsolvable2));
-        assertThrows(IllegalStateException.class, () -> new SudokuBoard(16, unsolvable3));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable2));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable3));
     }
 
     @Test
@@ -135,9 +328,22 @@ public class SudokuBoardTest {
                 *,*,*,3,2,9,*,*,1
                 """;
 
-        SudokuBoard board = new SudokuBoard(9, easy);
+        SudokuBoard board = new SudokuBoard(easy);
         assertTrue(board.solved());
         assertTrue(board.verifySolution());
+
+
+        String easySmall = """
+                *,2,3,4,
+                4,3,*,1,
+                3,*,4,2,
+                2,4,1,*
+                """;
+
+        SudokuBoard smallBoard = new SudokuBoard(easySmall);
+        assertTrue(smallBoard.solved());
+        assertTrue(smallBoard.verifySolution());
+
 
         String easyBig = """
                 16,8,14,3,12,13,4,6,7,5,15,2,10,11,9,1
@@ -158,7 +364,7 @@ public class SudokuBoardTest {
                 5,9,3,11,6,14,7,2,8,10,1,13,*,*,*,*
                 """;
 
-        SudokuBoard bigBoard = new SudokuBoard(16, easyBig);
+        SudokuBoard bigBoard = new SudokuBoard(easyBig);
         assertTrue(bigBoard.solved());
         assertTrue(bigBoard.verifySolution());
 
@@ -178,8 +384,20 @@ public class SudokuBoardTest {
                 *,*,7,*,9,*,4,1,*
                 """;
 
-        SudokuBoard board = new SudokuBoard(9, game);
+        SudokuBoard board = new SudokuBoard(game);
         assertFalse(board.solved());
+
+
+        String smallGame = """
+                *,2,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                *,*,1,*
+                """;
+
+        SudokuBoard smallBoard = new SudokuBoard(smallGame);
+        assertFalse(smallBoard.solved());
+
 
         String bigGame = """
                 *,*,*,*,*,*,*,*,7,*,*,*,*,*,*,*
@@ -200,7 +418,7 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,*,1,*,*,*,16,*
                  """;
 
-        SudokuBoard bigBoard = new SudokuBoard(16, bigGame);
+        SudokuBoard bigBoard = new SudokuBoard(bigGame);
         assertFalse(bigBoard.solved());
     }
 
@@ -219,10 +437,24 @@ public class SudokuBoardTest {
                 *,*,7,*,9,*,4,1,*
                 """;
 
-        SudokuBoard board = new SudokuBoard(9, game);
+        SudokuBoard board = new SudokuBoard(game);
         SudokuBoard board2 = board.clone();
         assertNotSame(board, board2);
         assertEquals(board.toString(), board2.toString());
+
+
+        String smallGame = """
+                *,2,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                *,*,1,*
+                """;
+
+        SudokuBoard smallBoard = new SudokuBoard(smallGame);
+        SudokuBoard smallBoard2 = smallBoard.clone();
+        assertNotSame(smallBoard, smallBoard2);
+        assertEquals(smallBoard.toString(), smallBoard2.toString());
+
 
         String bigGame = """
                 *,*,*,*,*,*,*,*,7,*,*,*,*,*,*,*
@@ -243,7 +475,7 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,*,1,*,*,*,16,*
                  """;
 
-        SudokuBoard bigBoard = new SudokuBoard(16, bigGame);
+        SudokuBoard bigBoard = new SudokuBoard(bigGame);
         SudokuBoard bigBoard2 = bigBoard.clone();
         assertNotSame(bigBoard, bigBoard2);
         assertEquals(bigBoard.toString(), bigBoard2.toString());
@@ -275,8 +507,8 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,
                 """;
 
-        SudokuBoard board = new SudokuBoard(9, game);
-        SudokuBoard board2 = new SudokuBoard(9, game2);
+        SudokuBoard board = new SudokuBoard(game);
+        SudokuBoard board2 = new SudokuBoard(game2);
 
         // Board2 should have a lower heuristic value as it has more filled squares and thus is
         // closer to being a solution
@@ -295,7 +527,46 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,4,*,
                 """;
 
-        SudokuBoard board3 = new SudokuBoard(9, game3);
+        SudokuBoard board3 = new SudokuBoard(game3);
+
+        // Board3 should have a lower heuristic value as board2 and board3 have the same number of
+        // filled squares, but board3 has fewer total candidates remaining
+        assertTrue(board3.compareTo(board2) < 0);
+        assertTrue(board2.compareTo(board3) > 0);
+    }
+
+    @Test
+    public void testCompareToSize4Board() {
+        String game = """
+                1,2,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                """;
+
+        String game2 = """
+                1,2,*,*,
+                3,*,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                """;
+
+        SudokuBoard board = new SudokuBoard(game);
+        SudokuBoard board2 = new SudokuBoard(game2);
+
+        // Board2 should have a lower heuristic value as it has more filled squares and thus is
+        // closer to being a solution
+        assertTrue(board.compareTo(board2) > 0);
+        assertTrue(board2.compareTo(board) < 0);
+
+        String game3 = """
+                1,2,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                *,*,*,3,
+                """;
+
+        SudokuBoard board3 = new SudokuBoard(game3);
 
         // Board3 should have a lower heuristic value as board2 and board3 have the same number of
         // filled squares, but board3 has fewer total candidates remaining
@@ -343,8 +614,8 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
                 """;
 
-        SudokuBoard board = new SudokuBoard(16, game);
-        SudokuBoard board2 = new SudokuBoard(16, game2);
+        SudokuBoard board = new SudokuBoard(game);
+        SudokuBoard board2 = new SudokuBoard(game2);
 
         // Board2 should have a lower heuristic value as it has more filled squares and thus is
         // closer to being a solution
@@ -370,7 +641,7 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,*,*,*,*,5,*,*,
                 """;
 
-        SudokuBoard board3 = new SudokuBoard(16 , game3);
+        SudokuBoard board3 = new SudokuBoard(game3);
 
         // Board3 should have a lower heuristic value as board2 and board3 have the same number of
         // filled squares, but board3 has fewer total candidates remaining
@@ -392,13 +663,30 @@ public class SudokuBoardTest {
                 *,*,7,*,9,*,4,1,*
                 """;
 
-        SudokuBoard board = new SudokuBoard(9, game);
+        SudokuBoard board = new SudokuBoard(game);
         List<SudokuBoard> successors = board.getSuccessors();
         assertFalse(successors.isEmpty());
 
         // the successors should all be closer to being a solution
         for (SudokuBoard successor : successors) {
             assertTrue(board.compareTo(successor) > 0);
+        }
+
+
+        String smallGame = """
+                1,2,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                """;
+
+        SudokuBoard smallBoard = new SudokuBoard(smallGame);
+        successors = smallBoard.getSuccessors();
+        assertFalse(successors.isEmpty());
+
+        // the successors should all be closer to being a solution
+        for (SudokuBoard successor : successors) {
+            assertTrue(smallBoard.compareTo(successor) > 0);
         }
 
 
@@ -421,7 +709,7 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,*,1,*,*,*,16,*
                  """;
 
-        SudokuBoard bigBoard = new SudokuBoard(16, bigGame);
+        SudokuBoard bigBoard = new SudokuBoard(bigGame);
         successors = bigBoard.getSuccessors();
         assertFalse(successors.isEmpty());
 
@@ -444,7 +732,7 @@ public class SudokuBoardTest {
                 1,*,*,5,*,*,*,9,2
                 *,*,7,*,9,*,4,1,*
                 """;
-        SudokuBoard board = new SudokuBoard(9, game);
+        SudokuBoard board = new SudokuBoard(game);
         assertThrows(IllegalStateException.class, board::verifySolution);
 
 
@@ -459,9 +747,20 @@ public class SudokuBoardTest {
                  9,1,6,8,5,7,2,3,4
                  7,4,5,3,2,9,8,6,1
                 """;
-        SudokuBoard solvedBoard = new SudokuBoard(9, solved);
+        SudokuBoard solvedBoard = new SudokuBoard(solved);
         assertTrue(solvedBoard.solved());
         assertTrue(solvedBoard.verifySolution());
+
+
+        String solvedSmall = """
+                1,2,3,4,
+                4,3,2,1,
+                3,1,4,2,
+                2,4,1,3
+                """;
+        SudokuBoard solvedSmallBoard = new SudokuBoard(solvedSmall);
+        assertTrue(solvedSmallBoard.solved());
+        assertTrue(solvedSmallBoard.verifySolution());
 
 
         String solvedBig = """
@@ -482,7 +781,7 @@ public class SudokuBoardTest {
                 6,16,8,12,3,11,1,4,5,14,7,15,13,10,2,9
                 5,9,3,11,6,14,7,2,8,10,1,13,4,12,16,15
                 """;
-        SudokuBoard solvedBigBoard = new SudokuBoard(16, solvedBig);
+        SudokuBoard solvedBigBoard = new SudokuBoard(solvedBig);
         assertTrue(solvedBigBoard.solved());
         assertTrue(solvedBigBoard.verifySolution());
     }

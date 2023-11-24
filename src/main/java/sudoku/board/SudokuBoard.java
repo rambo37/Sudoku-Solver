@@ -3,7 +3,7 @@ package sudoku.board;
 import java.util.*;
 
 /**
- * This class represents a Sudoku board of a specified size.
+ * This class represents a Sudoku board.
  * <p>
  * The Sudoku board is represented internally as a two-dimensional array of CandidateSet objects.
  * Each CandidateSet represents the set of candidates for a particular square on the board. The
@@ -11,13 +11,13 @@ import java.util.*;
  * been set for each square.
  * <p>
  * The size of the Sudoku board, the total number of squares, and the size of each box within the
- * board are all stored as final attributes in the class. The number of filled squares and the total
- * number of candidates are also tracked as they are used to come up with a heuristic value.
+ * board are all stored as attributes in the class. The number of filled squares and the total
+ * number of candidates are also tracked as they are used to compute a heuristic value.
  * <p>
  * Instances are created from a String representation of a Sudoku board. The String should use new
  * line characters to separate rows, commas to separate values, and any non-numerical character for
  * initially blank squares. If the String representation specifies an unwinnable game, an exception
- * is thrown.
+ * is thrown. Games must be either 4x4, 9x9 or 16x16.
  * <p>
  * The class uses constraint propagation to reduce the search space and automatically fill squares
  * with only 1 legal value remaining. As such, games that can be solved entirely without any
@@ -35,26 +35,34 @@ import java.util.*;
  * returned true.
  *
  * @author Savraj Bassi
- * @version 20/11/2023
+ * @version 24/11/2023
  */
 
 public class SudokuBoard implements Comparable<SudokuBoard> {
-    private final CandidateSet[][] board;
-    private final boolean[][] hasValueSet;
-    private final int SIZE;
-    private final int TOTAL_SQUARES;
-    private final int BOX_SIZE;
+    private CandidateSet[][] board;
+    private boolean[][] hasValueSet;
+    private int SIZE;
+    private int TOTAL_SQUARES;
+    private int BOX_SIZE;
     private int filledSquares = 0;
     private int totalNumberOfCandidates;
 
     /**
-     * Initialises the fields of the SudokuBoard class that require initialisation. Called by the
-     * public constructor and used by the clone method to only perform the bare minimum amount of
-     * initialisation.
+     * Initialises the fields of the SudokuBoard class that require initialisation. Used exclusively
+     * by the clone method to only perform the bare minimum amount of initialisation for improved
+     * performance.
      *
      * @param size The size of the Sudoku board (e.g., 9 for a 9 by 9 board)
      */
     private SudokuBoard(int size) {
+        initialiseFields(size);
+    }
+
+    /**
+     * Initialises the fields of the SudokuBoard class that require initialisation.
+     * @param size The size of the Sudoku board (e.g., 9 for a 9 by 9 board)
+     */
+    private void initialiseFields(int size) {
         board = new CandidateSet[size][size];
         hasValueSet = new boolean[size][size];
         SIZE = size;
@@ -66,20 +74,32 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
     /**
      * Creates a new SudokuBoard from a String representation of a Sudoku board. If during the
      * creation process it becomes evident the game is unsolvable, throws an IllegalStateException.
+     * If the board has an invalid size, an IllegalArgumentException is thrown. The only valid sizes
+     * are 4x4, 9x9 and 16x16.
      *
-     * @param size  The size of the Sudoku board (e.g., 9 for a 9 by 9 board)
      * @param board The String representation of a Sudoku board. Each row of the board should be on
      *              a separate line and the values within a row should be separated by commas.
      *              Any non-numerical character can be used for empty squares.
      */
-    public SudokuBoard(int size, String board) {
-        this(size);
+    public SudokuBoard(String board) {
+        String[] rows = board.split("\n");
+        int size = rows.length;
+        if (size != 4 && size != 9 && size != 16) {
+            throw new IllegalArgumentException("Invalid board size. Only 4x4, 9x9 and 16x16 " +
+                    "boards are supported.");
+        }
+
+        initialiseFields(size);
         initialiseBoard();
 
-        String[] rows = board.split("\n");
         for (int row = 0; row < size; row++) {
             String currentRow = rows[row];
             String[] squares = currentRow.split(",");
+            // Row does not contain the right amount of values
+            if (squares.length != size) {
+                throw new IllegalArgumentException("Invalid board size. Only 4x4, 9x9 and 16x16 " +
+                        "boards are supported.");
+            }
             for (int column = 0; column < size; column++) {
                 String currentSquare = squares[column];
                 if (Character.isDigit(currentSquare.charAt(0))) {
