@@ -35,7 +35,7 @@ import java.util.*;
  * returned true.
  *
  * @author Savraj Bassi
- * @version 24/11/2023
+ * @version 25/11/2023
  */
 
 public class SudokuBoard implements Comparable<SudokuBoard> {
@@ -45,6 +45,28 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
     private int BOX_SIZE;
     private int squaresRemaining;
     private int totalNumberOfCandidates;
+    private final static int MAX_BOARD_SIZE = 16;
+    // 2D arrays to provide efficient access to all BoardPositions for a specific row/column
+    private final static BoardPosition[][] rows;
+    private final static BoardPosition[][] columns;
+
+    // Initialise the arrays to contain all valid board positions for every row/column of the
+    // largest possible board size. If the actual size is less, a copy of these arrays with the
+    // appropriate size will be created when needed
+    static {
+        rows = new BoardPosition[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
+        columns = new BoardPosition[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
+        for (int i = 0; i < MAX_BOARD_SIZE; i++) {
+            BoardPosition[] row = new BoardPosition[MAX_BOARD_SIZE];
+            BoardPosition[] column = new BoardPosition[MAX_BOARD_SIZE];
+            for (int j = 0; j < MAX_BOARD_SIZE; j++) {
+                row[j] = new BoardPosition(i, j);
+                column[j] = new BoardPosition(j, i);
+            }
+            rows[i] = row;
+            columns[i] = column;
+        }
+    }
 
     /**
      * Initialises the fields of the SudokuBoard class that require initialisation. Used exclusively
@@ -306,11 +328,8 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
      * square in that row
      */
     private BoardPosition[] getRow(int row) {
-        BoardPosition[] boardRow = new BoardPosition[SIZE];
-        for (int column = 0; column < SIZE; column++) {
-            boardRow[column] = new BoardPosition(row, column);
-        }
-        return boardRow;
+        if (SIZE == MAX_BOARD_SIZE) return rows[row];
+        return Arrays.copyOfRange(rows[row], 0, SIZE);
     }
 
     /**
@@ -321,11 +340,8 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
      * square in that column
      */
     private BoardPosition[] getColumn(int column) {
-        BoardPosition[] boardColumn = new BoardPosition[SIZE];
-        for (int row = 0; row < SIZE; row++) {
-            boardColumn[row] = new BoardPosition(row, column);
-        }
-        return boardColumn;
+        if (SIZE == MAX_BOARD_SIZE) return columns[column];
+        return Arrays.copyOfRange(columns[column], 0, SIZE);
     }
 
     /**
