@@ -57,7 +57,7 @@ public class CandidateSetTest {
         assertEquals(set.size(), 8);
 
         CandidateSet set2 = new CandidateSet(16);
-        boolean removed2 = set.remove(16);
+        boolean removed2 = set2.remove(16);
         assertTrue(removed2);
         int[] expectedCandidates2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
         assertArrayEquals(set2.getCandidates(), expectedCandidates2);
@@ -74,7 +74,7 @@ public class CandidateSetTest {
         assertEquals(set.size(), 8);
 
         CandidateSet set2 = new CandidateSet(16);
-        boolean removed2 = set.remove(1);
+        boolean removed2 = set2.remove(1);
         assertTrue(removed2);
         int[] expectedCandidates2 = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         assertArrayEquals(set2.getCandidates(), expectedCandidates2);
