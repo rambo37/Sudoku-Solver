@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sudoku.controller.SudokuController">
+   <children>
+      <ScrollPane>
+         <content>
+            <VBox fx:id="leftVBox" alignment="CENTER" spacing="50.0">
+               <children>
+                  <HBox alignment="BOTTOM_CENTER" minHeight="75.0" prefHeight="75.0" spacing="100.0">
+                     <children>
+                        <VBox alignment="BOTTOM_LEFT" spacing="15.0">
+                           <children>
+                              <Label text="Select board size">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ChoiceBox fx:id="boardSizeSelector" prefWidth="150.0" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="BOTTOM_LEFT" spacing="15.0">
+                           <children>
+                              <Label text="Select solving strategy">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ChoiceBox fx:id="solverSelector" prefWidth="150.0" />
+                           </children>
+                        </VBox>
+                        <Button mnemonicParsing="false" onAction="#solve" text="Solve" />
+                     </children>
+                  </HBox>
+                  <GridPane fx:id="inputBoard" alignment="CENTER" gridLinesVisible="true">
+
+            </GridPane>
+               </children>
+               <padding>
+                  <Insets top="70.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+      <ScrollPane>
+         <content>
+            <VBox fx:id="rightVBox" alignment="CENTER" spacing="50.0">
+               <children>
+                  <VBox alignment="CENTER" minHeight="75.0" minWidth="1.0" prefHeight="75.0" spacing="10.0">
+                     <children>
+                        <Label fx:id="statusLabel" textAlignment="CENTER">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ProgressIndicator fx:id="progressIndicator" />
+                     </children>
+                  </VBox>
+                  <GridPane fx:id="solvedBoard" alignment="CENTER">
+                  </GridPane>
+               </children>
+               <padding>
+                  <Insets top="70.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</HBox>

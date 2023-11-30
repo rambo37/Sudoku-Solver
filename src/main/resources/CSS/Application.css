@@ -1,0 +1,9 @@
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+}
+
+.text-field {
+    -fx-border-color: black;
+}
