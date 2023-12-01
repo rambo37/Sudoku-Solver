@@ -125,6 +125,16 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
                 String currentSquare = squares[column];
                 if (Character.isDigit(currentSquare.charAt(0))) {
                     int value = Integer.parseInt(currentSquare);
+                    // If the current square has already had its value set by the constraint
+                    // propagation code, then throw an exception if the value that was set is not
+                    // the same as the one specified in the String for this position as the value
+                    // in the String is invalid.
+                    if (hasValueSet[row][column]) {
+                        int setValue = this.board[row][column].getOnlyCandidate();
+                        if (value != setValue) {
+                            throw new IllegalStateException("Unsolvable Sudoku game");
+                        }
+                    }
                     // Do not attempt to set the square value if it has already got a value set -
                     // this could have happened due to an earlier iteration's call to setSquareValue
                     // triggering the setting of the current square's value
