@@ -114,6 +114,42 @@ public class SudokuSolverTest {
             6,16,8,12,3,11,1,4,5,14,7,15,13,10,2,9
             5,9,3,11,6,14,7,2,8,10,1,13,4,12,16,15
             """;
+    private final String empty = """
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*
+                """;
+
+    private final String smallEmpty = """
+                *,*,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                """;
+    private final String bigEmpty = """
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                """;
     private final String game1 = """
             *,*,*,*,5,6,*,9,*
             *,5,*,4,*,*,*,*,*
@@ -252,6 +288,15 @@ public class SudokuSolverTest {
             assertSolverSolvesBoard(breadthFirstSolver, solvedBig);
         }
 
+        // An empty game should be solvable
+        @Test
+        public void testEmptyGameGivenToSolveMethod() {
+            assertSolverSolvesBoard(breadthFirstSolver, smallEmpty);
+            // Breadth first solver takes too long to solve larger empty boards
+//            assertSolverSolvesBoard(breadthFirstSolver, empty);
+//            assertSolverSolvesBoard(breadthFirstSolver, bigEmpty);
+        }
+
         // Run the solver on all the solvable games and ensure they are all correctly solved
         @Test
         public void testUnsolvedButSolvableGames() {
@@ -293,6 +338,13 @@ public class SudokuSolverTest {
         }
 
         @Test
+        public void testEmptyGameGivenToSolveMethod() {
+            assertSolverSolvesBoard(depthFirstSolver, smallEmpty);
+            assertSolverSolvesBoard(depthFirstSolver, empty);
+            assertSolverSolvesBoard(depthFirstSolver, bigEmpty);
+        }
+
+        @Test
         public void testUnsolvedButSolvableGames() {
             runSolverOnSolvableGames(depthFirstSolver);
         }
@@ -327,6 +379,13 @@ public class SudokuSolverTest {
             assertSolverSolvesBoard(bestFirstSolver, solved);
             assertSolverSolvesBoard(bestFirstSolver, solvedSmall);
             assertSolverSolvesBoard(bestFirstSolver, solvedBig);
+        }
+
+        @Test
+        public void testEmptyGameGivenToSolveMethod() {
+            assertSolverSolvesBoard(bestFirstSolver, smallEmpty);
+            assertSolverSolvesBoard(bestFirstSolver, empty);
+            assertSolverSolvesBoard(bestFirstSolver, bigEmpty);
         }
 
         @Test

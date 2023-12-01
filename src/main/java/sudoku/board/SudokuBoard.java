@@ -403,9 +403,10 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
      */
     public List<SudokuBoard> getSuccessors() {
         List<SudokuBoard> successors = new LinkedList<>();
-        // A variable to keep track of the smallest number of legal values, initially set to SIZE
-        // since that is the maximum number of legal values a square can have
-        int fewestLegalValues = SIZE;
+        // fewestLegalValues keeps track of the smallest number of legal values, initially set to
+        // SIZE + 1 since we have not yet discovered the smallest number (which at most will be
+        // equal to SIZE).
+        int fewestLegalValues = SIZE + 1;
         for (int row = 0; row < SIZE; row++) {
             for (int column = 0; column < SIZE; column++) {
                 if (hasValueSet[row][column]) continue;
