@@ -11,7 +11,7 @@ import java.util.*;
  * calculate the average time taken to solve a particular puzzle.
  *
  * @author Savraj Bassi
- * @version 24/11/2023
+ * @version 01/12/2023
  */
 
 public abstract class SudokuSolver {
@@ -34,7 +34,7 @@ public abstract class SudokuSolver {
 
         while (!openList.isEmpty()) {
             SudokuBoard current = getNextBoard();
-            if (current.solved()) {
+            if (current.solved() && current.verifySolution()) {
                 long endTime = System.currentTimeMillis();
                 long timeTaken = endTime - startTime;
                 if (timesMap.containsKey(board)) {
