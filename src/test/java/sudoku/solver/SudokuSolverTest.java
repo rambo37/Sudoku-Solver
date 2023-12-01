@@ -20,9 +20,26 @@ public class SudokuSolverTest {
             *,*,*,*,*,*,*,*,*,
             *,*,*,*,*,*,*,*,*,
             """;
+    private final String unsolvable2 = """
+            1,2,3,*,*,*,*,*,*,
+            4,5,6,*,*,*,*,*,*,
+            7,8,8,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,
+            """;
     private final String unsolvableSmall = """
             1,*,*,*,
             *,1,*,*,
+            *,*,*,*,
+            *,*,*,*,
+            """;
+    private final String unsolvableSmall2 = """
+            1,2,*,*,
+            3,3,*,*,
             *,*,*,*,
             *,*,*,*,
             """;
@@ -44,6 +61,28 @@ public class SudokuSolverTest {
             *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
             *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
             """;
+    private final String unsolvableBig2 = """
+            1,2,3,4,*,*,*,*,*,*,*,*,*,*,*,*,
+            5,6,7,8,*,*,*,*,*,*,*,*,*,*,*,*,
+            9,10,11,12,*,*,*,*,*,*,*,*,*,*,*,*,
+            13,14,15,15,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+            """;
+
+    private final String[] unsolvableGames = new String[]{unsolvable, unsolvable2, unsolvableSmall,
+            unsolvableSmall2, unsolvableBig2, unsolvableBig2};
+
     private final String easy = """
             2,3,*,9,1,5,*,*,*
             *,*,*,2,*,*,5,4,*
@@ -237,6 +276,17 @@ public class SudokuSolverTest {
     }
 
     /**
+     * Runs the given solver on all the unsolvable games to see the solver throws an exception
+     *
+     * @param solver The solver to be tested
+     */
+    private void runSolverOnUnsolvableGames(SudokuSolver solver) {
+        for (String unsolvableGame : unsolvableGames) {
+            assertThrows(IllegalStateException.class, () -> solver.solve(unsolvableGame));
+        }
+    }
+
+    /**
      * Runs the given solver on all the solvable games to see the solver is able to solve them
      *
      * @param solver The solver to be tested
@@ -264,12 +314,7 @@ public class SudokuSolverTest {
         // When given an unsolvable game, an exception should be thrown
         @Test
         public void testUnsolvableGameThrowsException() {
-            assertThrows(IllegalStateException.class,
-                    () -> breadthFirstSolver.solve(unsolvable));
-            assertThrows(IllegalStateException.class,
-                    () -> breadthFirstSolver.solve(unsolvableSmall));
-            assertThrows(IllegalStateException.class,
-                    () -> breadthFirstSolver.solve(unsolvableBig));
+            runSolverOnUnsolvableGames(breadthFirstSolver);
         }
 
         // Solver should solve a game that is solved automatically by the code in SudokuBoard
@@ -317,10 +362,7 @@ public class SudokuSolverTest {
     class DepthFirstSolverTest {
         @Test
         public void testUnsolvableGameThrowsException() {
-            assertThrows(IllegalStateException.class, () -> depthFirstSolver.solve(unsolvable));
-            assertThrows(IllegalStateException.class,
-                    () -> depthFirstSolver.solve(unsolvableSmall));
-            assertThrows(IllegalStateException.class, () -> depthFirstSolver.solve(unsolvableBig));
+            runSolverOnUnsolvableGames(depthFirstSolver);
         }
 
         @Test
@@ -362,9 +404,7 @@ public class SudokuSolverTest {
     class BestFirstSolverTest {
         @Test
         public void testUnsolvableGameThrowsException() {
-            assertThrows(IllegalStateException.class, () -> bestFirstSolver.solve(unsolvable));
-            assertThrows(IllegalStateException.class, () -> bestFirstSolver.solve(unsolvableSmall));
-            assertThrows(IllegalStateException.class, () -> bestFirstSolver.solve(unsolvableBig));
+            runSolverOnUnsolvableGames(bestFirstSolver);
         }
 
         @Test

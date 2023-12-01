@@ -196,9 +196,19 @@ public class SudokuBoardTest {
                 *,*,*,*,
                 """;
 
+        // Board that has a cell that ends up with only 1 legal value during board creation process
+        // (i.e., the bottom right cell of the top left box)
+        String unsolvable4 = """
+                1,2,*,*,
+                3,3,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                """;
+
         assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable));
         assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable2));
         assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable3));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable4));
     }
 
     @Test
@@ -242,9 +252,24 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,
                 """;
 
+        // Board that has a cell that ends up with only 1 legal value during board creation process
+        // (i.e., the bottom right cell of the top left box)
+        String unsolvable4 = """
+                1,2,3,*,*,*,*,*,*,
+                4,5,6,*,*,*,*,*,*,
+                7,8,8,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                """;
+
         assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable));
         assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable2));
         assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable3));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable4));
     }
 
     @Test
@@ -309,9 +334,31 @@ public class SudokuBoardTest {
                 *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
                 """;
 
+        // Board that has a cell that ends up with only 1 legal value during board creation process
+        // (i.e., the bottom right cell of the top left box)
+        String unsolvable4 = """
+                1,2,3,4,*,*,*,*,*,*,*,*,*,*,*,*,
+                5,6,7,8,*,*,*,*,*,*,*,*,*,*,*,*,
+                9,10,11,12,*,*,*,*,*,*,*,*,*,*,*,*,
+                13,14,15,15,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                """;
+
         assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable));
         assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable2));
         assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable3));
+        assertThrows(IllegalStateException.class, () -> new SudokuBoard(unsolvable4));
     }
 
     @Test
