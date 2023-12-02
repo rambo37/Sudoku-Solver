@@ -39,7 +39,12 @@
                               <ChoiceBox fx:id="solverSelector" prefWidth="150.0" />
                            </children>
                         </VBox>
-                        <Button mnemonicParsing="false" onAction="#solve" text="Solve" />
+                        <HBox alignment="BOTTOM_LEFT" spacing="20.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#solve" text="Solve" />
+                              <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                           </children>
+                        </HBox>
                      </children>
                   </HBox>
                   <GridPane fx:id="inputBoard" alignment="CENTER" gridLinesVisible="true">

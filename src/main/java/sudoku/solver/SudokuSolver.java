@@ -33,6 +33,11 @@ public abstract class SudokuSolver {
         openList.add(sudokuBoard);
 
         while (!openList.isEmpty()) {
+            // Terminate the thread execution if an interrupt is issued (this may happen if a board
+            // is taking too long to solve)
+            if (Thread.currentThread().isInterrupted()) {
+                return null;
+            }
             SudokuBoard current = getNextBoard();
             if (current.solved() && current.verifySolution()) {
                 long endTime = System.currentTimeMillis();

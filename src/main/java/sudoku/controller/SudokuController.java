@@ -36,11 +36,14 @@ public class SudokuController {
     private int boxSize = (int) Math.sqrt(boardSize);
     private double cellSize = 640 / (double) boardSize;
     private final SimpleBooleanProperty solving = new SimpleBooleanProperty(false);
+    private Task<SudokuBoard> solveTask;
 
     @FXML
     protected ChoiceBox<String> boardSizeSelector;
     @FXML
     protected ChoiceBox<String> solverSelector;
+    @FXML
+    protected Button cancel;
     @FXML
     protected GridPane inputBoard;
     @FXML
@@ -88,7 +91,10 @@ public class SudokuController {
             rebuildBoard(solvedBoard, false);
         });
 
+        // The progress indicator and cancel button should only be visible when a board is being
+        // solved.
         progressIndicator.visibleProperty().bind(solving);
+        cancel.visibleProperty().bind(solving);
     }
 
     /**
@@ -247,7 +253,7 @@ public class SudokuController {
 
         // Create a Task and run it in a separate thread to prevent the JavaFX application thread
         // becoming unresponsive while the board is being solved
-        Task<SudokuBoard> solveTask = new Task<>() {
+        solveTask = new Task<>() {
             @Override
             protected SudokuBoard call() {
                 String board = getBoardStringFromInputBoard();
@@ -296,6 +302,14 @@ public class SudokuController {
         };
 
         new Thread(solveTask).start();
+    }
+
+    /**
+     * Cancels the solving of the current Sudoku puzzle.
+     */
+    @FXML
+    protected void cancel() {
+        solveTask.cancel();
     }
 
     /**
