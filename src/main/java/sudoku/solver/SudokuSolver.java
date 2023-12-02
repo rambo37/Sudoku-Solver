@@ -11,7 +11,7 @@ import java.util.*;
  * calculate the average time taken to solve a particular puzzle.
  *
  * @author Savraj Bassi
- * @version 01/12/2023
+ * @version 02/12/2023
  */
 
 public abstract class SudokuSolver {

@@ -6,7 +6,6 @@ import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -25,7 +24,7 @@ import java.util.Map;
  * This class serves as the controller of the application.
  *
  * @author Savraj Bassi
- * @version 30/11/2023
+ * @version 02/12/2023
  */
 
 public class SudokuController {
@@ -164,27 +163,14 @@ public class SudokuController {
                 textField.setStyle(textField.getStyle() + style);
                 textField.setAlignment(Pos.CENTER);
 
-                textField.addEventFilter(KeyEvent.KEY_TYPED, event -> {
-                    char inputChar = event.getCharacter().charAt(0);
-                    if (!Character.isDigit(inputChar) ||
-                            !isValidValue(textField.getText() + inputChar)) {
-                        event.consume();
-                    }
-                });
-            }
-        }
-    }
-
-    private void clearBoardValues(GridPane board) {
-        ObservableList<Node> children = board.getChildren();
-        for (int row = 0; row < boardSize; row++) {
-            for (int column = 0; column < boardSize; column++) {
-                int index = row * boardSize + column;
-                Node child = children.get(index);
-                if (child.getClass() == TextField.class) {
-                    TextField textField = (TextField) child;
-                    textField.setText("");
+                if (editable) {
+                    textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                        // Empty String is allowed
+                        if (newValue.isEmpty()) return;
+                        if (!isValidValue(newValue)) textField.setText(oldValue);
+                    });
                 }
+
             }
         }
     }
@@ -201,6 +187,24 @@ public class SudokuController {
             return value >= 1 && value <= boardSize;
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+
+    /**
+     * Sets the value of each TextField of the given board to the empty String.
+     * @param board The GridPane board that is to have its values cleared
+     */
+    private void clearBoardValues(GridPane board) {
+        ObservableList<Node> children = board.getChildren();
+        for (int row = 0; row < boardSize; row++) {
+            for (int column = 0; column < boardSize; column++) {
+                int index = row * boardSize + column;
+                Node child = children.get(index);
+                if (child.getClass() == TextField.class) {
+                    TextField textField = (TextField) child;
+                    textField.setText("");
+                }
+            }
         }
     }
 
