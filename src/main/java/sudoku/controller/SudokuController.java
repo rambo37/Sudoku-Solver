@@ -1,6 +1,7 @@
 package sudoku.controller;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -42,6 +43,8 @@ public class SudokuController {
     protected ChoiceBox<String> boardSizeSelector;
     @FXML
     protected ChoiceBox<String> solverSelector;
+    @FXML
+    protected Button solve;
     @FXML
     protected Button cancel;
     @FXML
@@ -95,6 +98,10 @@ public class SudokuController {
         // solved.
         progressIndicator.visibleProperty().bind(solving);
         cancel.visibleProperty().bind(solving);
+        // The choice boxes and the solve button should be disabled if a puzzle is being solved.
+        boardSizeSelector.disableProperty().bind(solving);
+        solverSelector.disableProperty().bind(solving);
+        solve.disableProperty().bind(solving);
     }
 
     /**
@@ -164,6 +171,20 @@ public class SudokuController {
                         event.consume();
                     }
                 });
+            }
+        }
+    }
+
+    private void clearBoardValues(GridPane board) {
+        ObservableList<Node> children = board.getChildren();
+        for (int row = 0; row < boardSize; row++) {
+            for (int column = 0; column < boardSize; column++) {
+                int index = row * boardSize + column;
+                Node child = children.get(index);
+                if (child.getClass() == TextField.class) {
+                    TextField textField = (TextField) child;
+                    textField.setText("");
+                }
             }
         }
     }
@@ -248,6 +269,7 @@ public class SudokuController {
      */
     @FXML
     protected void solve() {
+        clearBoardValues(solvedBoard);
         solving.set(true);
         setStatus("Solving " + boardSize + "x" + boardSize + " puzzle.", Color.BLACK);
 
