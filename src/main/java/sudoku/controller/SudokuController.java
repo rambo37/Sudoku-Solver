@@ -3,10 +3,12 @@ package sudoku.controller;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -165,7 +167,10 @@ public class SudokuController {
                 textField.setStyle(textField.getStyle() + style);
                 textField.setAlignment(Pos.CENTER);
 
-                if (editable) {
+                if (!editable) {
+                    textField.addEventFilter(MouseEvent.MOUSE_PRESSED, Event::consume);
+                }
+                else {
                     textField.textProperty().addListener((observable, oldValue, newValue) -> {
                         // Empty String is allowed
                         if (newValue.isEmpty()) return;
