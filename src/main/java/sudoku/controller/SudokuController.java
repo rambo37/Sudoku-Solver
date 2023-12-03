@@ -6,6 +6,7 @@ import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -24,7 +25,7 @@ import java.util.Map;
  * This class serves as the controller of the application.
  *
  * @author Savraj Bassi
- * @version 02/12/2023
+ * @version 03/12/2023
  */
 
 public class SudokuController {
@@ -105,7 +106,8 @@ public class SudokuController {
 
     /**
      * Rebuilds the specified board GridPane by clearing all children and then recreating them.
-     * @param board The board GridPane that is to be rebuilt
+     *
+     * @param board    The board GridPane that is to be rebuilt
      * @param editable Whether the board is editable
      */
     private void rebuildBoard(GridPane board, boolean editable) {
@@ -169,8 +171,39 @@ public class SudokuController {
                         if (newValue.isEmpty()) return;
                         if (!isValidValue(newValue)) textField.setText(oldValue);
                     });
-                }
 
+                    // Add arrow key traversal
+                    textField.setOnKeyPressed(event -> {
+                        ObservableList<Node> children = board.getChildren();
+                        int index = children.indexOf(textField);
+
+                        if (event.getCode() == KeyCode.UP) {
+                            if (index >= boardSize) {
+                                children.get(index - boardSize).requestFocus();
+                            } else {
+                                children.get(index + boardSize * (boardSize - 1)).requestFocus();
+                            }
+                        } else if (event.getCode() == KeyCode.DOWN) {
+                            if (index < boardSize * boardSize - boardSize) {
+                                children.get(index + boardSize).requestFocus();
+                            } else {
+                                children.get(index - boardSize * (boardSize - 1)).requestFocus();
+                            }
+                        } else if (event.getCode() == KeyCode.LEFT) {
+                            if (index % boardSize != 0) {
+                                children.get(index - 1).requestFocus();
+                            } else {
+                                children.get(index + boardSize - 1).requestFocus();
+                            }
+                        } else if (event.getCode() == KeyCode.RIGHT) {
+                            if (index % boardSize != boardSize - 1) {
+                                children.get(index + 1).requestFocus();
+                            } else {
+                                children.get(index - (boardSize - 1)).requestFocus();
+                            }
+                        }
+                    });
+                }
             }
         }
     }
@@ -192,6 +225,7 @@ public class SudokuController {
 
     /**
      * Sets the value of each TextField of the given board to the empty String.
+     *
      * @param board The GridPane board that is to have its values cleared
      */
     private void clearBoardValues(GridPane board) {
