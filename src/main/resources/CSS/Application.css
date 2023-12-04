@@ -6,4 +6,5 @@
 
 .text-field {
     -fx-border-color: black;
+    -fx-padding: 0px;
 }

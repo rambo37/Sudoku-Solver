@@ -1,6 +1,10 @@
 package sudoku.controller;
 
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.Event;
@@ -27,7 +31,7 @@ import java.util.Map;
  * This class serves as the controller of the application.
  *
  * @author Savraj Bassi
- * @version 03/12/2023
+ * @version 04/12/2023
  */
 
 public class SudokuController {
@@ -37,10 +41,12 @@ public class SudokuController {
     private final Map<String, SudokuSolver> solvers = new HashMap<>();
     private int boardSize = 9;
     private int boxSize = (int) Math.sqrt(boardSize);
-    private double cellSize = 640 / (double) boardSize;
+    private final SimpleDoubleProperty guiBoardSizeProperty = new SimpleDoubleProperty();
     private final SimpleBooleanProperty solving = new SimpleBooleanProperty(false);
     private Task<SudokuBoard> solveTask;
 
+    @FXML
+    protected TilePane controls;
     @FXML
     protected ChoiceBox<String> boardSizeSelector;
     @FXML
@@ -59,6 +65,8 @@ public class SudokuController {
     protected VBox leftVBox;
     @FXML
     protected VBox rightVBox;
+    @FXML
+    protected VBox statusVBox;
     @FXML
     protected Label statusLabel;
     @FXML
@@ -91,19 +99,24 @@ public class SudokuController {
             boardSize = boardSizes.get(newValue);
             // Recalculate the box and cell sizes using the new boardSize
             boxSize = (int) Math.sqrt(boardSize);
-            cellSize = 640 / (double) boardSize;
             rebuildBoard(inputBoard, true);
             rebuildBoard(solvedBoard, false);
         });
 
-        // The progress indicator and cancel button should only be visible when a board is being
-        // solved.
+        // The progress indicator should only be visible when a board is being solved.
         progressIndicator.visibleProperty().bind(solving);
-        cancel.visibleProperty().bind(solving);
         // The choice boxes and the solve button should be disabled if a puzzle is being solved.
         boardSizeSelector.disableProperty().bind(solving);
         solverSelector.disableProperty().bind(solving);
         solve.disableProperty().bind(solving);
+        // The cancel button should be disabled if a puzzle is not being solved.
+        cancel.disableProperty().bind(solving.not());
+
+        // Ensure the VBox that contains the status message maintains the same height as the
+        // controls TilePane so that both the inputBoard and solvedBoard GridPanes start at the
+        // same vertical position.
+        statusVBox.minHeightProperty().bind(controls.heightProperty());
+        statusVBox.prefHeightProperty().bind(controls.heightProperty());
     }
 
     /**
@@ -117,24 +130,20 @@ public class SudokuController {
         for (int row = 0; row < boardSize; row++) {
             for (int column = 0; column < boardSize; column++) {
                 TextField textField = new TextField();
-                textField.setPrefWidth(cellSize);
-                textField.setPrefHeight(cellSize);
-                textField.setMinWidth(cellSize);
-                textField.setMinHeight(cellSize);
+                DoubleBinding binding = guiBoardSizeProperty.divide(boardSize);
+                textField.prefWidthProperty().bind(binding);
+                textField.prefHeightProperty().bind(binding);
+                textField.minWidthProperty().bind(binding);
+                textField.minHeightProperty().bind(binding);
                 textField.setEditable(editable);
                 textField.setFocusTraversable(editable);
+                textField.setAlignment(Pos.CENTER);
                 board.add(textField, column, row);
 
                 boolean lastColumnOfBox = (column + 1) % boxSize == 0;
                 boolean lastRowOfBox = (row + 1) % boxSize == 0;
-                int fontSize;
 
-                switch (boardSize) {
-                    case 4 -> fontSize = 45;
-                    case 9 -> fontSize = 25;
-                    default -> fontSize = 15;
-                }
-                String style = "-fx-font-size:" + fontSize + "px;";
+                String style = "";
 
                 int borderWidth = 2;
                 if (boardSize == 4) borderWidth = 4;
@@ -164,13 +173,28 @@ public class SudokuController {
                     style += ("-fx-border-width: 0;");
                 }
 
-                textField.setStyle(textField.getStyle() + style);
-                textField.setAlignment(Pos.CENTER);
+                // The font size of the text field will need to vary as the size of the text field
+                // changes (which happens as stage width changes).
+                DoubleBinding fontSizeBinding;
+                switch (boardSize) {
+                    case 4, 9 -> fontSizeBinding = binding.multiply(0.5);
+                    default -> fontSizeBinding = binding.multiply(0.45);
+                }
+
+                // This Property stores the style String for the text field. It starts with the
+                // border css styles and then appends the font size using the fontSizeBinding
+                SimpleStringProperty stringProperty = new SimpleStringProperty(style + "-fx-font" +
+                        "-size:");
+                // Bind the styleProperty of the text field to the stringProperty so that changes to
+                // the stringProperty (as a result of the fontSizeBinding changing due to the stage
+                // being resized) updates the CSS for the text field.
+                StringExpression stringExpression =
+                        stringProperty.concat(fontSizeBinding.asString()).concat("px;");
+                textField.styleProperty().bind(stringExpression);
 
                 if (!editable) {
                     textField.addEventFilter(MouseEvent.MOUSE_PRESSED, Event::consume);
-                }
-                else {
+                } else {
                     textField.textProperty().addListener((observable, oldValue, newValue) -> {
                         // Empty String is allowed
                         if (newValue.isEmpty()) return;
@@ -259,6 +283,15 @@ public class SudokuController {
 
         leftVBox.prefWidthProperty().bind(stage.widthProperty().divide(2));
         rightVBox.prefWidthProperty().bind(stage.widthProperty().divide(2));
+
+        // The maximum size of each GridPane board
+        DoubleBinding guiBoardSizeBinding = stage.widthProperty().divide(2.5);
+        guiBoardSizeProperty.bind(guiBoardSizeBinding);
+        inputBoard.maxWidthProperty().bind(guiBoardSizeBinding);
+        solvedBoard.maxWidthProperty().bind(guiBoardSizeBinding);
+        controls.maxWidthProperty().bind(guiBoardSizeBinding);
+        controls.prefWidthProperty().bind(guiBoardSizeBinding);
+        controls.hgapProperty().bind(stage.widthProperty().divide(25));
     }
 
     /**
