@@ -143,7 +143,7 @@ public class SudokuController {
                 boolean lastColumnOfBox = (column + 1) % boxSize == 0;
                 boolean lastRowOfBox = (row + 1) % boxSize == 0;
 
-                String style = "";
+                String style = editable ? "" : "-fx-cursor: default;";
 
                 int borderWidth = 2;
                 if (boardSize == 4) borderWidth = 4;
