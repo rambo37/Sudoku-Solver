@@ -9,6 +9,68 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SudokuBoardTest {
 
     @Test
+    public void testIllegalNumberInGameString() {
+        // 0s are not allowed
+        String illegal = """
+                *,*,*,*,*,*,*,0,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                """;
+
+        // 10s are not allowed for boards of size 9
+        String illegal2 = """
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,10,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                """;
+
+        // 5s are not allowed for boards of size 4
+        String illegal3 = """
+                1,2,3,5,
+                *,*,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                """;
+
+        // 17s are not allowed for boards of size 16
+        String illegal4 = """
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,17,*,*,
+                """;
+
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(illegal));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(illegal2));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(illegal3));
+        assertThrows(IllegalArgumentException.class, () -> new SudokuBoard(illegal4));
+    }
+
+    @Test
     public void testIllegalSizeGameThrowsException() {
         String size3Game = """
                 1,*,*,
@@ -882,5 +944,54 @@ public class SudokuBoardTest {
         SudokuBoard solvedBigBoard = new SudokuBoard(solvedBig);
         assertTrue(solvedBigBoard.solved());
         assertTrue(solvedBigBoard.verifySolution());
+    }
+
+    @Test
+    public void testGetSIZE() {
+        String empty = """
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*
+                """;
+        SudokuBoard emptyBoard = new SudokuBoard(empty);
+        assertEquals(emptyBoard.getSIZE(), 9);
+
+
+        String smallEmpty = """
+                *,*,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                *,*,*,*,
+                """;
+        SudokuBoard smallBoard = new SudokuBoard(smallEmpty);
+        assertEquals(smallBoard.getSIZE(), 4);
+
+
+        String bigEmpty = """
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                *,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,
+                """;
+        SudokuBoard bigBoard = new SudokuBoard(bigEmpty);
+        assertEquals(bigBoard.getSIZE(), 16);
     }
 }

@@ -31,7 +31,7 @@ import java.util.Map;
  * This class serves as the controller of the application.
  *
  * @author Savraj Bassi
- * @version 04/12/2023
+ * @version 05/12/2023
  */
 
 public class SudokuController {
@@ -39,6 +39,7 @@ public class SudokuController {
     private Stage stage;
     private final Map<String, Integer> boardSizes = new HashMap<>();
     private final Map<String, SudokuSolver> solvers = new HashMap<>();
+    private final Map<String, Node> inputMethods = new HashMap<>();
     private int boardSize = 9;
     private int boxSize = (int) Math.sqrt(boardSize);
     private final SimpleDoubleProperty guiBoardSizeProperty = new SimpleDoubleProperty();
@@ -52,11 +53,15 @@ public class SudokuController {
     @FXML
     protected ChoiceBox<String> solverSelector;
     @FXML
+    protected ChoiceBox<String> inputMethodSelector;
+    @FXML
     protected Button solve;
     @FXML
     protected Button cancel;
     @FXML
     protected GridPane inputBoard;
+    @FXML
+    protected TextArea textArea;
     @FXML
     protected GridPane solvedBoard;
     @FXML
@@ -89,6 +94,12 @@ public class SudokuController {
         solverSelector.getItems().addAll("Breadth first", "Depth first", "Best first");
         solverSelector.setValue("Best first");
 
+        inputMethods.put("Grid", inputBoard);
+        inputMethods.put("Text area", textArea);
+        inputMethodSelector.getItems().addAll("Grid", "Text area");
+        inputMethodSelector.setValue("Grid");
+        textArea.setVisible(false);
+
         rebuildBoard(inputBoard, true);
         rebuildBoard(solvedBoard, false);
 
@@ -101,6 +112,14 @@ public class SudokuController {
             boxSize = (int) Math.sqrt(boardSize);
             rebuildBoard(inputBoard, true);
             rebuildBoard(solvedBoard, false);
+        });
+
+        // Show only the corresponding Node of the newly selected input method
+        inputMethodSelector.getSelectionModel().selectedItemProperty().addListener((observable,
+                                                                                    oldValue,
+                                                                                    newValue) -> {
+            inputMethods.values().forEach(inputMethod ->
+                    inputMethod.setVisible(inputMethod == inputMethods.get(newValue)));
         });
 
         // The progress indicator should only be visible when a board is being solved.
@@ -285,17 +304,34 @@ public class SudokuController {
         rightVBox.prefWidthProperty().bind(stage.widthProperty().divide(2));
 
         // The maximum size of each GridPane board
-        DoubleBinding guiBoardSizeBinding = stage.widthProperty().divide(2.5);
+        DoubleBinding guiBoardSizeBinding = stage.widthProperty().divide(2.6);
         guiBoardSizeProperty.bind(guiBoardSizeBinding);
         inputBoard.maxWidthProperty().bind(guiBoardSizeBinding);
+        textArea.maxWidthProperty().bind(guiBoardSizeBinding);
+        textArea.maxHeightProperty().bind(guiBoardSizeBinding);
         solvedBoard.maxWidthProperty().bind(guiBoardSizeBinding);
         controls.maxWidthProperty().bind(guiBoardSizeBinding);
         controls.prefWidthProperty().bind(guiBoardSizeBinding);
-        controls.hgapProperty().bind(stage.widthProperty().divide(25));
+        controls.hgapProperty().bind(stage.widthProperty().divide(30));
     }
 
     /**
-     * Returns a String representation of the Sudoku board input by the user.
+     * Returns a String representation of the Sudoku board using the Node that was used to input the
+     * puzzle.
+     *
+     * @param inputMethod The Node which was used to input the puzzle
+     * @return A String representation of the Sudoku board
+     */
+    private String getBoardStringFromNode(Node inputMethod) {
+        if (inputMethod.getClass() == GridPane.class) {
+            return getBoardStringFromInputBoard();
+        } else {
+            return getBoardStringFromTextArea();
+        }
+    }
+
+    /**
+     * Returns a String representation of the Sudoku board input by the user via the GridPane.
      *
      * @return The String representation of the Sudoku board input by the user
      */
@@ -316,6 +352,15 @@ public class SudokuController {
             result.append("\n");
         }
         return result.toString();
+    }
+
+    /**
+     * Returns a String representation of the Sudoku board input by the user via the TextArea.
+     *
+     * @return The String representation of the Sudoku board input by the user
+     */
+    private String getBoardStringFromTextArea() {
+        return textArea.getText().strip();
     }
 
     /**
@@ -354,9 +399,17 @@ public class SudokuController {
         solveTask = new Task<>() {
             @Override
             protected SudokuBoard call() {
-                String board = getBoardStringFromInputBoard();
+                Node inputMethod = inputMethods.get(inputMethodSelector.getValue());
+                String board = getBoardStringFromNode(inputMethod);
                 System.out.println(board);
-
+                SudokuBoard sudokuBoard = new SudokuBoard(board);
+                int actualSize = sudokuBoard.getSIZE();
+                // This check is necessary since if a board is input by the text area input method,
+                // it may be a legal board but of the incorrect size.
+                if (actualSize != boardSize) {
+                    throw new IllegalStateException("Expected " + boardSize + "x" + boardSize +
+                            " board but received " + actualSize + "x" + actualSize + " board.");
+                }
                 try {
                     return solvers.get(solverSelector.getValue()).solve(board);
                 } catch (IllegalStateException e) {
@@ -387,8 +440,8 @@ public class SudokuController {
 
             @Override
             protected void failed() {
-                setStatus("Error occurred while solving the puzzle.", Color.RED);
                 solving.set(false);
+                setStatus(getException().getMessage(), Color.RED);
                 getException().printStackTrace();
             }
 

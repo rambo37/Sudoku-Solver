@@ -6,8 +6,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -40,6 +42,16 @@
                               <ChoiceBox fx:id="solverSelector" prefWidth="150.0" />
                            </children>
                         </VBox>
+                        <VBox alignment="BOTTOM_LEFT" layoutX="510.0" layoutY="10.0" spacing="15.0">
+                           <children>
+                              <Label text="Select input method">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ChoiceBox fx:id="inputMethodSelector" prefWidth="150.0" />
+                           </children>
+                        </VBox>
                         <HBox alignment="BOTTOM_LEFT" spacing="20.0">
                            <children>
                               <Button fx:id="solve" mnemonicParsing="false" onAction="#solve" text="Solve" />
@@ -48,12 +60,17 @@
                         </HBox>
                      </children>
                   </TilePane>
-                  <GridPane fx:id="inputBoard" alignment="CENTER" gridLinesVisible="true">
+                  <StackPane>
+                     <children>
+                        <GridPane fx:id="inputBoard" alignment="CENTER" gridLinesVisible="true">
 
             </GridPane>
+                        <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" />
+                     </children>
+                  </StackPane>
                </children>
                <padding>
-                  <Insets top="70.0" />
+                  <Insets top="30.0" />
                </padding>
             </VBox>
          </content>
@@ -76,7 +93,7 @@
                   </GridPane>
                </children>
                <padding>
-                  <Insets top="70.0" />
+                  <Insets top="30.0" />
                </padding>
             </VBox>
          </content>

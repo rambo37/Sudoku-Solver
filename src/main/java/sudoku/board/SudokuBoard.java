@@ -35,7 +35,7 @@ import java.util.*;
  * returned true.
  *
  * @author Savraj Bassi
- * @version 25/11/2023
+ * @version 05/12/2023
  */
 
 public class SudokuBoard implements Comparable<SudokuBoard> {
@@ -81,6 +81,7 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
 
     /**
      * Initialises the fields of the SudokuBoard class that require initialisation.
+     *
      * @param size The size of the Sudoku board (e.g., 9 for a 9 by 9 board)
      */
     private void initialiseFields(int size) {
@@ -125,6 +126,11 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
                 String currentSquare = squares[column];
                 if (Character.isDigit(currentSquare.charAt(0))) {
                     int value = Integer.parseInt(currentSquare);
+                    if (value > size || value < 1) {
+                        throw new IllegalArgumentException("Sudoku board contains invalid " +
+                                "value(s). All values in a board of size " + size + " must be " +
+                                "between 1 and " + size + ".");
+                    }
                     // If the current square has already had its value set by the constraint
                     // propagation code, then throw an exception if the value that was set is not
                     // the same as the one specified in the String for this position as the value
@@ -132,14 +138,14 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
                     if (hasValueSet[row][column]) {
                         int setValue = this.board[row][column].getOnlyCandidate();
                         if (value != setValue) {
-                            throw new IllegalStateException("Unsolvable Sudoku game");
+                            throw new IllegalStateException("Unsolvable Sudoku game.");
                         }
                     }
                     // Do not attempt to set the square value if it has already got a value set -
                     // this could have happened due to an earlier iteration's call to setSquareValue
                     // triggering the setting of the current square's value
                     if (!hasValueSet[row][column] && !setSquareValue(row, column, value)) {
-                        throw new IllegalStateException("Unsolvable Sudoku game");
+                        throw new IllegalStateException("Unsolvable Sudoku game.");
                     }
                 }
             }
@@ -498,6 +504,15 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
         }
 
         return true;
+    }
+
+    /**
+     * Returns the size of thisSudokuBoard object.
+     *
+     * @return The size of thisSudokuBoard object.
+     */
+    public int getSIZE() {
+        return SIZE;
     }
 
     /**
