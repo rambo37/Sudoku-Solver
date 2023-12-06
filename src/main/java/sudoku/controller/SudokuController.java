@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import sudoku.board.SudokuBoard;
@@ -65,7 +66,7 @@ public class SudokuController {
     @FXML
     protected GridPane solvedBoard;
     @FXML
-    protected HBox root;
+    protected ScrollPane root;
     @FXML
     protected VBox leftVBox;
     @FXML
@@ -76,6 +77,8 @@ public class SudokuController {
     protected Label statusLabel;
     @FXML
     protected ProgressIndicator progressIndicator;
+    @FXML
+    protected VBox help;
 
     /**
      * Initialises the ChoiceBoxes, the progress indicator and constructs both Sudoku boards.
@@ -136,6 +139,9 @@ public class SudokuController {
         // same vertical position.
         statusVBox.minHeightProperty().bind(controls.heightProperty());
         statusVBox.prefHeightProperty().bind(controls.heightProperty());
+
+        // Align the start of the help section with the inputBoard
+        help.translateXProperty().bind(inputBoard.layoutXProperty());
     }
 
     /**
@@ -313,6 +319,14 @@ public class SudokuController {
         controls.maxWidthProperty().bind(guiBoardSizeBinding);
         controls.prefWidthProperty().bind(guiBoardSizeBinding);
         controls.hgapProperty().bind(stage.widthProperty().divide(30));
+        // Wrap each child at the end of the solvedBoard
+        help.getChildren().forEach(child -> {
+            if (child.getClass() == Text.class) {
+                Text text = (Text) child;
+                DoubleBinding wrappingWidth = leftVBox.prefWidthProperty().add(guiBoardSizeBinding);
+                text.wrappingWidthProperty().bind(wrappingWidth);
+            }
+        });
     }
 
     /**
