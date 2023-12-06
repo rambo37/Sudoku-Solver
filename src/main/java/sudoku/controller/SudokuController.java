@@ -11,6 +11,7 @@ import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -46,6 +47,7 @@ public class SudokuController {
     private final SimpleDoubleProperty guiBoardSizeProperty = new SimpleDoubleProperty();
     private final SimpleBooleanProperty solving = new SimpleBooleanProperty(false);
     private Task<SudokuBoard> solveTask;
+    private final Image APPLICATION_ICON = new Image("Images/Icon.png");
 
     @FXML
     protected TilePane controls;
@@ -303,6 +305,7 @@ public class SudokuController {
      */
     public void setStage(Stage stage) {
         this.stage = stage;
+        stage.getIcons().add(APPLICATION_ICON);
         root.minWidthProperty().bind(stage.widthProperty());
         root.prefWidthProperty().bind(stage.widthProperty());
 
