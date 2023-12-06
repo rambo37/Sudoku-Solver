@@ -20,7 +20,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
-import sudoku.board.SudokuBoard;
+import sudoku.model.SudokuBoard;
 import sudoku.enums.BoardSize;
 import sudoku.enums.InputMethod;
 import sudoku.enums.SolverType;

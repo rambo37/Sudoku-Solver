@@ -3,7 +3,7 @@ package sudoku.solver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import sudoku.board.SudokuBoard;
+import sudoku.model.SudokuBoard;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package sudoku.board;
+package sudoku.model;
 
 import java.util.Arrays;
 import java.util.Objects;

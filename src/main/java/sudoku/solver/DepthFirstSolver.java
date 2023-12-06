@@ -1,6 +1,6 @@
 package sudoku.solver;
 
-import sudoku.board.SudokuBoard;
+import sudoku.model.SudokuBoard;
 
 import java.util.Stack;
 
