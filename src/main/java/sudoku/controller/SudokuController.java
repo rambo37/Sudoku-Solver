@@ -21,27 +21,20 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import sudoku.board.SudokuBoard;
-import sudoku.solver.BestFirstSolver;
-import sudoku.solver.BreadthFirstSolver;
-import sudoku.solver.DepthFirstSolver;
-import sudoku.solver.SudokuSolver;
-
-import java.util.HashMap;
-import java.util.Map;
+import sudoku.enums.BoardSize;
+import sudoku.enums.InputMethod;
+import sudoku.enums.SolverType;
 
 /**
  * This class serves as the controller of the application.
  *
  * @author Savraj Bassi
- * @version 05/12/2023
+ * @version 06/12/2023
  */
 
 public class SudokuController {
 
     private Stage stage;
-    private final Map<String, Integer> boardSizes = new HashMap<>();
-    private final Map<String, SudokuSolver> solvers = new HashMap<>();
-    private final Map<String, Node> inputMethods = new HashMap<>();
     private int boardSize = 9;
     private int boxSize = (int) Math.sqrt(boardSize);
     private final SimpleDoubleProperty guiBoardSizeProperty = new SimpleDoubleProperty();
@@ -52,11 +45,11 @@ public class SudokuController {
     @FXML
     protected TilePane controls;
     @FXML
-    protected ChoiceBox<String> boardSizeSelector;
+    protected ChoiceBox<BoardSize> boardSizeSelector;
     @FXML
-    protected ChoiceBox<String> solverSelector;
+    protected ChoiceBox<SolverType> solverSelector;
     @FXML
-    protected ChoiceBox<String> inputMethodSelector;
+    protected ChoiceBox<InputMethod> inputMethodSelector;
     @FXML
     protected Button solve;
     @FXML
@@ -87,22 +80,12 @@ public class SudokuController {
      */
     @FXML
     public void initialize() {
-        boardSizes.put("4x4", 4);
-        boardSizes.put("9x9", 9);
-        boardSizes.put("16x16", 16);
-        boardSizeSelector.getItems().addAll("4x4", "9x9", "16x16");
-        boardSizeSelector.setValue("9x9");
-
-        solvers.put("Breadth first", new BreadthFirstSolver());
-        solvers.put("Depth first", new DepthFirstSolver());
-        solvers.put("Best first", new BestFirstSolver());
-        solverSelector.getItems().addAll("Breadth first", "Depth first", "Best first");
-        solverSelector.setValue("Best first");
-
-        inputMethods.put("Grid", inputBoard);
-        inputMethods.put("Text area", textArea);
-        inputMethodSelector.getItems().addAll("Grid", "Text area");
-        inputMethodSelector.setValue("Grid");
+        boardSizeSelector.getItems().addAll(BoardSize.values());
+        boardSizeSelector.setValue(BoardSize.SIZE_9x9);
+        solverSelector.getItems().addAll(SolverType.values());
+        solverSelector.setValue(SolverType.BEST_FIRST);
+        inputMethodSelector.getItems().addAll(InputMethod.values());
+        inputMethodSelector.setValue(InputMethod.GRID);
         textArea.setVisible(false);
 
         rebuildBoard(inputBoard, true);
@@ -112,8 +95,8 @@ public class SudokuController {
         boardSizeSelector.getSelectionModel().selectedItemProperty().addListener((observable,
                                                                                   oldValue,
                                                                                   newValue) -> {
-            boardSize = boardSizes.get(newValue);
-            // Recalculate the box and cell sizes using the new boardSize
+            boardSize = newValue.getSize();
+            // Recalculate the box size using the new boardSize
             boxSize = (int) Math.sqrt(boardSize);
             rebuildBoard(inputBoard, true);
             rebuildBoard(solvedBoard, false);
@@ -123,8 +106,9 @@ public class SudokuController {
         inputMethodSelector.getSelectionModel().selectedItemProperty().addListener((observable,
                                                                                     oldValue,
                                                                                     newValue) -> {
-            inputMethods.values().forEach(inputMethod ->
-                    inputMethod.setVisible(inputMethod == inputMethods.get(newValue)));
+            for (InputMethod inputMethod : InputMethod.values()) {
+                getInputMethodNode(inputMethod).setVisible(inputMethod == newValue);
+            }
         });
 
         // The progress indicator should only be visible when a board is being solved.
@@ -262,6 +246,16 @@ public class SudokuController {
                 }
             }
         }
+    }
+
+    /**
+     * Returns the Node that the given InputMethod object corresponds to.
+     * @param inputMethod The InputMethod object that needs to be converted into a Node
+     * @return The corresponding Node for the InputMethod object
+     */
+    private Node getInputMethodNode(InputMethod inputMethod) {
+        if (inputMethod == InputMethod.GRID) return inputBoard;
+        return textArea;
     }
 
     /**
@@ -416,7 +410,7 @@ public class SudokuController {
         solveTask = new Task<>() {
             @Override
             protected SudokuBoard call() {
-                Node inputMethod = inputMethods.get(inputMethodSelector.getValue());
+                Node inputMethod = getInputMethodNode(inputMethodSelector.getValue());
                 String board = getBoardStringFromNode(inputMethod);
                 System.out.println(board);
                 SudokuBoard sudokuBoard = new SudokuBoard(board);
@@ -428,7 +422,7 @@ public class SudokuController {
                             " board but received " + actualSize + "x" + actualSize + " board.");
                 }
                 try {
-                    return solvers.get(solverSelector.getValue()).solve(board);
+                    return solverSelector.getValue().getSolver().solve(board);
                 } catch (IllegalStateException e) {
                     return null;
                 }
