@@ -29,7 +29,7 @@ import sudoku.enums.SolverType;
  * This class serves as the controller of the application.
  *
  * @author Savraj Bassi
- * @version 06/12/2023
+ * @version 07/12/2023
  */
 
 public class SudokuController {
@@ -302,6 +302,12 @@ public class SudokuController {
         stage.getIcons().add(APPLICATION_ICON);
         root.minWidthProperty().bind(stage.widthProperty());
         root.prefWidthProperty().bind(stage.widthProperty());
+
+        // Cancel the solveTask on window close so the program does not keep running in the
+        // background without the UI visible
+        stage.setOnCloseRequest(event -> {
+            if (solveTask != null && solveTask.isRunning()) solveTask.cancel();
+        });
 
         leftVBox.prefWidthProperty().bind(stage.widthProperty().divide(2));
         rightVBox.prefWidthProperty().bind(stage.widthProperty().divide(2));
