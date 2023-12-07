@@ -81,7 +81,7 @@ public class SudokuSolverTest {
             """;
 
     private final String[] unsolvableGames = new String[]{unsolvable, unsolvable2, unsolvableSmall,
-            unsolvableSmall2, unsolvableBig2, unsolvableBig2};
+            unsolvableSmall2, unsolvableBig, unsolvableBig2};
 
     private final String easy = """
             2,3,*,9,1,5,*,*,*
@@ -348,12 +348,12 @@ public class SudokuSolverTest {
             runSolverOnSolvableGames(breadthFirstSolver);
         }
 
-        // Check the average times are updated
+        // Check the times are updated
         @Test
-        public void testAverageTime() {
-            assertEquals(breadthFirstSolver.getAverageTime(bigGame1), 0);
+        public void testGetTimes() {
+            assertNull(breadthFirstSolver.getTimes(bigGame1));
             breadthFirstSolver.solve(bigGame1);
-            assertTrue(breadthFirstSolver.getAverageTime(bigGame1) > 0);
+            assertTrue(breadthFirstSolver.getTimes(bigGame1).size() > 0);
         }
     }
 
@@ -392,10 +392,10 @@ public class SudokuSolverTest {
         }
 
         @Test
-        public void testAverageTime() {
-            assertEquals(depthFirstSolver.getAverageTime(bigGame1), 0);
+        public void testGetTimes() {
+            assertNull(depthFirstSolver.getTimes(bigGame1));
             depthFirstSolver.solve(bigGame1);
-            assertTrue(depthFirstSolver.getAverageTime(bigGame1) > 0);
+            assertTrue(depthFirstSolver.getTimes(bigGame1).size() > 0);
         }
     }
 
@@ -434,10 +434,10 @@ public class SudokuSolverTest {
         }
 
         @Test
-        public void testAverageTime() {
-            assertEquals(bestFirstSolver.getAverageTime(bigGame1), 0);
+        public void testGetTimes() {
+            assertNull(bestFirstSolver.getTimes(bigGame1));
             bestFirstSolver.solve(bigGame1);
-            assertTrue(bestFirstSolver.getAverageTime(bigGame1) > 0);
+            assertTrue(bestFirstSolver.getTimes(bigGame1).size() > 0);
         }
     }
 }

@@ -8,10 +8,10 @@ import java.util.*;
  * This class is an abstract class for a Sudoku solver.
  * <p>
  * It provides methods to solve a Sudoku puzzle using an open list of Sudoku boards, and to
- * calculate the average time taken to solve a particular puzzle.
+ * retrieve a list of all the times taken to solve a particular puzzle.
  *
  * @author Savraj Bassi
- * @version 02/12/2023
+ * @version 07/12/2023
  */
 
 public abstract class SudokuSolver {
@@ -72,20 +72,14 @@ public abstract class SudokuSolver {
     protected abstract SudokuBoard getNextBoard();
 
     /**
-     * Gets the average time taken to solve a particular puzzle represented by the given board.
+     * Gets a list of all the times taken to solve a particular puzzle represented by the given
+     * board.
      *
      * @param board The board representation
      * @return The average time taken to solve the puzzle, or 0 if no solve times are recorded for
      * the board
      */
-    public long getAverageTime(String board) {
-        ArrayList<Long> times = timesMap.get(board);
-        if (times == null) return 0;
-
-        long total = 0;
-        for (Long time : times) {
-            total += time;
-        }
-        return total / times.size();
+    public List<Long> getTimes(String board) {
+        return timesMap.get(board);
     }
 }

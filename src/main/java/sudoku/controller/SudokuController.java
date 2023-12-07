@@ -24,6 +24,9 @@ import sudoku.model.SudokuBoard;
 import sudoku.enums.BoardSize;
 import sudoku.enums.InputMethod;
 import sudoku.enums.SolverType;
+import sudoku.solver.SudokuSolver;
+
+import java.util.List;
 
 /**
  * This class serves as the controller of the application.
@@ -250,6 +253,7 @@ public class SudokuController {
 
     /**
      * Returns the Node that the given InputMethod object corresponds to.
+     *
      * @param inputMethod The InputMethod object that needs to be converted into a Node
      * @return The corresponding Node for the InputMethod object
      */
@@ -414,10 +418,13 @@ public class SudokuController {
         // Create a Task and run it in a separate thread to prevent the JavaFX application thread
         // becoming unresponsive while the board is being solved
         solveTask = new Task<>() {
+            private String board;
+            private final SudokuSolver solver = solverSelector.getValue().getSolver();
+
             @Override
             protected SudokuBoard call() {
                 Node inputMethod = getInputMethodNode(inputMethodSelector.getValue());
-                String board = getBoardStringFromNode(inputMethod);
+                board = getBoardStringFromNode(inputMethod);
                 System.out.println(board);
                 SudokuBoard sudokuBoard = new SudokuBoard(board);
                 int actualSize = sudokuBoard.getSIZE();
@@ -428,7 +435,7 @@ public class SudokuController {
                             " board but received " + actualSize + "x" + actualSize + " board.");
                 }
                 try {
-                    return solverSelector.getValue().getSolver().solve(board);
+                    return solver.solve(board);
                 } catch (IllegalStateException e) {
                     return null;
                 }
@@ -441,7 +448,11 @@ public class SudokuController {
                     setStatus("Unsolvable Sudoku board provided.", Color.RED);
 
                 } else {
-                    setStatus("Board solved!", Color.GREEN);
+                    List<Long> times = solver.getTimes(board);
+                    long timeTaken = times.get(times.size() - 1);
+                    String statusMessage = "Board solved! Time taken: " + formatTime(timeTaken);
+
+                    setStatus(statusMessage, Color.GREEN);
                     System.out.println(solved);
                     String solvedString = solved.toString()
                             .replaceAll(" {2}", " ")
@@ -453,6 +464,22 @@ public class SudokuController {
                     fillSolution(solvedString);
                 }
                 solving.set(false);
+            }
+
+            /**
+             * Formats the given time taken into a readable string representation.
+             *
+             * @param timeTaken The time taken in milliseconds
+             * @return The formatted time string
+             */
+            private String formatTime(long timeTaken) {
+                if (timeTaken > 1000) {
+                    double seconds = timeTaken / 1000.0; // limit the number of decimal places to 2
+                    seconds = Math.round(seconds * 100.0) / 100.0;
+                    return seconds + "s";
+                } else {
+                    return timeTaken + "ms";
+                }
             }
 
             @Override
