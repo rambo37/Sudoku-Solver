@@ -1,5 +1,7 @@
 package sudoku.model;
 
+import javafx.scene.Node;
+import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -993,5 +995,46 @@ public class SudokuBoardTest {
                 """;
         SudokuBoard bigBoard = new SudokuBoard(bigEmpty);
         assertEquals(bigBoard.getSIZE(), 16);
+    }
+
+    @Test
+    public void testGetValues() {
+        String bigGame = """
+                *,*,*,*,*,*,*,*,7,*,*,*,*,*,*,*
+                7,*,*,*,11,*,*,*,*,*,*,*,*,*,*,*
+                1,*,*,*,16,*,14,*,3,*,11,*,2,*,*,*
+                *,*,2,*,*,*,5,*,*,*,*,*,*,*,*,*
+                2,*,*,*,*,*,*,*,*,*,*,*,16,*,*,*
+                *,*,11,*,1,*,12,*,14,*,*,*,*,*,*,*
+                15,*,*,*,*,*,16,*,*,*,*,*,*,*,*,*
+                *,*,*,*,5,*,*,*,2,*,*,*,*,*,7,*
+                *,*,*,*,4,*,*,*,*,*,*,*,*,*,8,*
+                *,*,*,*,8,*,6,*,*,*,14,*,*,*,3,*
+                *,*,*,*,13,*,15,*,11,*,16,*,5,*,4,*
+                *,*,16,*,*,*,9,*,12,*,*,*,*,*,*,*
+                *,*,*,*,*,*,13,*,6,*,*,*,*,*,*,*
+                14,*,*,*,*,*,10,*,*,*,12,*,11,*,*,*
+                *,*,*,*,3,*,*,*,5,*,*,*,*,*,*,*
+                *,*,*,*,*,*,*,*,*,*,1,*,*,*,16,*
+                 """;
+
+        SudokuBoard board = new SudokuBoard(bigGame);
+        int[][] values = board.getValues();
+        String[] rows = bigGame.split("\n");
+        for (int row = 0; row < 9; row++) {
+            String currentRow = rows[row];
+            String[] squares = currentRow.split(",");
+
+            for (int column = 0; column < 9; column++) {
+                String currentSquare = squares[column];
+                if (Character.isDigit(currentSquare.charAt(0))) {
+                    int value = Integer.parseInt(currentSquare);
+                    assertEquals(values[row][column], value);
+                }
+                else {
+                    assertEquals(values[row][column], 0);
+                }
+            }
+        }
     }
 }

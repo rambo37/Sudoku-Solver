@@ -35,7 +35,7 @@ import java.util.*;
  * returned true.
  *
  * @author Savraj Bassi
- * @version 05/12/2023
+ * @version 07/12/2023
  */
 
 public class SudokuBoard implements Comparable<SudokuBoard> {
@@ -513,6 +513,26 @@ public class SudokuBoard implements Comparable<SudokuBoard> {
      */
     public int getSIZE() {
         return SIZE;
+    }
+
+    /**
+     * Returns a 2D array representing the values of the Sudoku board. Each cell contains either the
+     * value (if it has only one candidate), or 0 (if there is more than one candidate still).
+     *
+     * @return a 2D array representing the values of the Sudoku board.
+     */
+    public int[][] getValues() {
+        int[][] values = new int[SIZE][SIZE];
+        for (int row = 0; row < SIZE; row++) {
+            for (int column = 0; column < SIZE; column++) {
+                if (board[row][column].size() == 1) {
+                    values[row][column] = board[row][column].getOnlyCandidate();
+                } else {
+                    values[row][column] = 0;
+                }
+            }
+        }
+        return values;
     }
 
     /**

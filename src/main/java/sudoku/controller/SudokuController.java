@@ -385,20 +385,19 @@ public class SudokuController {
     }
 
     /**
-     * Fills the solvedBoard GridPane with a String representation of the solved puzzle.
+     * Fills the solvedBoard GridPane using a 2D array representation of the solved puzzle.
      *
-     * @param solved The String representation of the solved puzzle
+     * @param values The 2D array representation of the solved puzzle
      */
-    private void fillSolution(String solved) {
-        String[] rows = solved.split("\n");
+    private void fillSolution(int[][] values) {
         for (int row = 0; row < boardSize; row++) {
-            String[] rowValues = rows[row].split(",");
+            int[] rowValues = values[row];
             for (int column = 0; column < boardSize; column++) {
                 int index = row * boardSize + column;
                 Node child = solvedBoard.getChildren().get(index);
                 if (child.getClass() == TextField.class) {
                     TextField textField = (TextField) child;
-                    textField.setText(rowValues[column]);
+                    textField.setText(String.valueOf(rowValues[column]));
                 }
             }
         }
@@ -454,14 +453,7 @@ public class SudokuController {
 
                     setStatus(statusMessage, Color.GREEN);
                     System.out.println(solved);
-                    String solvedString = solved.toString()
-                            .replaceAll(" {2}", " ")
-                            .replaceAll(" ", ",")
-                            .replaceAll("\n,", "\n")
-                            .replaceAll("^,", "");
-                    System.out.println(solvedString);
-
-                    fillSolution(solvedString);
+                    fillSolution(solved.getValues());
                 }
                 solving.set(false);
             }
