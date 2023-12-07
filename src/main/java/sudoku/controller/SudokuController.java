@@ -54,6 +54,8 @@ public class SudokuController {
     @FXML
     protected ChoiceBox<InputMethod> inputMethodSelector;
     @FXML
+    protected Slider zoomSlider;
+    @FXML
     protected Button solve;
     @FXML
     protected Button cancel;
@@ -128,6 +130,8 @@ public class SudokuController {
         // same vertical position.
         statusVBox.minHeightProperty().bind(controls.heightProperty());
         statusVBox.prefHeightProperty().bind(controls.heightProperty());
+        statusVBox.maxWidthProperty().bind(controls.widthProperty());
+        statusVBox.prefWidthProperty().bind(controls.widthProperty());
 
         // Align the start of the help section with the inputBoard
         help.translateXProperty().bind(inputBoard.layoutXProperty());
@@ -313,19 +317,24 @@ public class SudokuController {
             if (solveTask != null && solveTask.isRunning()) solveTask.cancel();
         });
 
-        leftVBox.prefWidthProperty().bind(stage.widthProperty().divide(2));
-        rightVBox.prefWidthProperty().bind(stage.widthProperty().divide(2));
+        DoubleBinding halfStageWidth = stage.widthProperty().divide(2);
+        leftVBox.prefWidthProperty().bind(halfStageWidth);
+        rightVBox.prefWidthProperty().bind(halfStageWidth);
+        controls.maxWidthProperty().bind(halfStageWidth);
+        controls.prefWidthProperty().bind(halfStageWidth);
+        controls.hgapProperty().bind(stage.widthProperty().divide(30));
 
+        DoubleBinding zoomFactor = new SimpleDoubleProperty(4)
+                .subtract(zoomSlider.valueProperty())
+                .add(2.6);
         // The maximum size of each GridPane board
-        DoubleBinding guiBoardSizeBinding = stage.widthProperty().divide(2.6);
+        DoubleBinding guiBoardSizeBinding = stage.widthProperty().divide(zoomFactor);
         guiBoardSizeProperty.bind(guiBoardSizeBinding);
         inputBoard.maxWidthProperty().bind(guiBoardSizeBinding);
         textArea.maxWidthProperty().bind(guiBoardSizeBinding);
         textArea.maxHeightProperty().bind(guiBoardSizeBinding);
         solvedBoard.maxWidthProperty().bind(guiBoardSizeBinding);
-        controls.maxWidthProperty().bind(guiBoardSizeBinding);
-        controls.prefWidthProperty().bind(guiBoardSizeBinding);
-        controls.hgapProperty().bind(stage.widthProperty().divide(30));
+
         // Wrap each child at the end of the solvedBoard
         help.getChildren().forEach(child -> {
             if (child.getClass() == Text.class) {
