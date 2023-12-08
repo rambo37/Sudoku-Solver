@@ -1,6 +1,6 @@
-package sudoku.gui;
+package sudoku_solver.gui;
 
-import sudoku.controller.SudokuController;
+import sudoku_solver.controller.SudokuController;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

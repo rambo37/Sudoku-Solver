@@ -1,9 +1,9 @@
-package sudoku.enums;
+package sudoku_solver.enums;
 
-import sudoku.solver.BestFirstSolver;
-import sudoku.solver.BreadthFirstSolver;
-import sudoku.solver.DepthFirstSolver;
-import sudoku.solver.SudokuSolver;
+import sudoku_solver.solver.BestFirstSolver;
+import sudoku_solver.solver.BreadthFirstSolver;
+import sudoku_solver.solver.DepthFirstSolver;
+import sudoku_solver.solver.SudokuSolver;
 
 /**
  * An enumeration representing different types of solvers for a Sudoku puzzle.

@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<ScrollPane fx:id="root" hbarPolicy="NEVER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sudoku.controller.SudokuController">
+<ScrollPane fx:id="root" hbarPolicy="NEVER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sudoku_solver.controller.SudokuController">
    <content>
       <VBox prefHeight="900.0" prefWidth="1450.0" spacing="50.0">
          <children>

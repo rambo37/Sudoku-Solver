@@ -1,4 +1,4 @@
-package sudoku.model;
+package sudoku_solver.model;
 
 import java.util.Objects;
 

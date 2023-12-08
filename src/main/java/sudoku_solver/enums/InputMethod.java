@@ -1,4 +1,4 @@
-package sudoku.enums;
+package sudoku_solver.enums;
 
 /**
  * An enumeration representing different methods for inputting a Sudoku puzzle in the GUI.

@@ -1,4 +1,4 @@
-package sudoku.controller;
+package sudoku_solver.controller;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.StringExpression;
@@ -20,11 +20,11 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
-import sudoku.model.SudokuBoard;
-import sudoku.enums.BoardSize;
-import sudoku.enums.InputMethod;
-import sudoku.enums.SolverType;
-import sudoku.solver.SudokuSolver;
+import sudoku_solver.model.SudokuBoard;
+import sudoku_solver.enums.BoardSize;
+import sudoku_solver.enums.InputMethod;
+import sudoku_solver.enums.SolverType;
+import sudoku_solver.solver.SudokuSolver;
 
 import java.util.List;
 

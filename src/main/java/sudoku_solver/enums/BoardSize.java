@@ -1,4 +1,4 @@
-package sudoku.enums;
+package sudoku_solver.enums;
 
 /**
  * An enumeration representing the size of a Sudoku board.

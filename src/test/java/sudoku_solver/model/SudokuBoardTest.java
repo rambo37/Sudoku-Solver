@@ -1,7 +1,5 @@
-package sudoku.model;
+package sudoku_solver.model;
 
-import javafx.scene.Node;
-import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

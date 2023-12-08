@@ -1,9 +1,9 @@
-package sudoku.solver;
+package sudoku_solver.solver;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import sudoku.model.SudokuBoard;
+import sudoku_solver.model.SudokuBoard;
 
 import static org.junit.jupiter.api.Assertions.*;
 
