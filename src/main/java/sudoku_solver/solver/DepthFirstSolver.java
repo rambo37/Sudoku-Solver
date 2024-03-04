@@ -12,7 +12,7 @@ import java.util.Stack;
  * and retrieve the next Sudoku board from the open list.
  *
  * @author Savraj Bassi
- * @version 20/11/2023
+ * @version 04/03/2024
  */
 
 public class DepthFirstSolver extends SudokuSolver {
@@ -21,7 +21,7 @@ public class DepthFirstSolver extends SudokuSolver {
      * Constructs a new DepthFirstSolver object, initialising the openList as an empty Stack.
      */
     public DepthFirstSolver() {
-        openList = new Stack<>();
+        super(new Stack<>());
     }
 
     /**
@@ -31,6 +31,6 @@ public class DepthFirstSolver extends SudokuSolver {
      */
     @Override
     protected SudokuBoard getNextBoard() {
-        return ((Stack<SudokuBoard>) openList).pop();
+        return ((Stack<SudokuBoard>) getOpenList()).pop();
     }
 }

@@ -11,12 +11,31 @@ import java.util.*;
  * retrieve a list of all the times taken to solve a particular puzzle.
  *
  * @author Savraj Bassi
- * @version 07/12/2023
+ * @version 04/03/2024
  */
 
 public abstract class SudokuSolver {
-    protected Collection<SudokuBoard> openList;
+    private final Collection<SudokuBoard> openList;
     private final Map<String, ArrayList<Long>> timesMap = new HashMap<>();
+
+    /**
+     * Constructs a new SudokuSolver object with the specified openList.
+     *
+     * @param openList The collection of SudokuBoard objects to be used as the open list for solving
+     *                 Sudoku puzzles
+     */
+    public SudokuSolver(Collection<SudokuBoard> openList) {
+        this.openList = openList;
+    }
+
+    /**
+     * Retrieves the open list of SudokuBoard objects.
+     *
+     * @return The collection of SudokuBoard objects used as the open list
+     */
+    protected Collection<SudokuBoard> getOpenList() {
+        return openList;
+    }
 
     /**
      * Solves the Sudoku puzzle specified by the String board.

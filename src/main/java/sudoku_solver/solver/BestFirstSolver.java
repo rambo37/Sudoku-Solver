@@ -12,7 +12,7 @@ import java.util.PriorityQueue;
  * search and retrieve the next Sudoku board from the open list.
  *
  * @author Savraj Bassi
- * @version 20/11/2023
+ * @version 04/03/2024
  */
 
 public class BestFirstSolver extends SudokuSolver {
@@ -21,7 +21,7 @@ public class BestFirstSolver extends SudokuSolver {
      * Constructs a new BestFirstSolver object, initialising the openList as an empty PriorityQueue.
      */
     public BestFirstSolver() {
-        openList = new PriorityQueue<>();
+        super(new PriorityQueue<>());
     }
 
     /**
@@ -31,6 +31,6 @@ public class BestFirstSolver extends SudokuSolver {
      */
     @Override
     protected SudokuBoard getNextBoard() {
-        return ((PriorityQueue<SudokuBoard>) openList).remove();
+        return ((PriorityQueue<SudokuBoard>) getOpenList()).remove();
     }
 }

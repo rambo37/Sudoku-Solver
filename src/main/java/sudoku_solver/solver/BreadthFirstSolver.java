@@ -13,7 +13,7 @@ import java.util.Queue;
  * and retrieve the next Sudoku board from the open list.
  *
  * @author Savraj Bassi
- * @version 20/11/2023
+ * @version 04/03/2024
  */
 
 public class BreadthFirstSolver extends SudokuSolver {
@@ -22,7 +22,7 @@ public class BreadthFirstSolver extends SudokuSolver {
      * Constructs a new BreadthFirstSolver object, initialising the openList as an empty LinkedList.
      */
     public BreadthFirstSolver() {
-        openList = new LinkedList<>();
+        super(new LinkedList<>());
     }
 
     /**
@@ -31,6 +31,6 @@ public class BreadthFirstSolver extends SudokuSolver {
      */
     @Override
     protected SudokuBoard getNextBoard() {
-        return ((Queue<SudokuBoard>) openList).remove();
+        return ((Queue<SudokuBoard>) getOpenList()).remove();
     }
 }
