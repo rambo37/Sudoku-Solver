@@ -1,7 +1,7 @@
 # Sudoku Solver
 Sudoku Solver is a Java program with a user-friendly graphical interface (GUI) implemented using JavaFX. This program efficiently solves Sudoku puzzles of varying difficulty levels, providing users with a satisfying solving experience.
 
-##Features
+## Features
 * Interactive GUI: Sudoku Solver offers an intuitive graphical interface that allows users to interact with the program seamlessly, inputting puzzle values and receiving solutions effortlessly.
 
 * Zoom: The program provides a slider to adjust zoom, allowing users to select a comfortable viewing size.
@@ -12,9 +12,9 @@ Sudoku Solver is a Java program with a user-friendly graphical interface (GUI) i
 
 * Error Detection: The program incorporates error detection functionality to prevent crashes and inform the user of any errors in their input.
 
-##Getting Started
+## Getting Started
 
-###Prerequisites
+### Prerequisites
 Ensure you have JDK and JavaFX installed on your system. [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) and [JavaFX 21.0.1](https://gluonhq.com/products/javafx/) were used for this project.
 
 Clone the Sudoku-Solver repository to your local machine.
